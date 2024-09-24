@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Inventory_Management_System</RootNamespace>
+    <RootNamespace>InventoryManagementSystem</RootNamespace>
   </PropertyGroup>
 
 </Project>

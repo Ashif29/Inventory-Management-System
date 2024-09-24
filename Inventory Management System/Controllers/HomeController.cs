@@ -1,8 +1,8 @@
-using Inventory_Management_System.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace Inventory_Management_System.Controllers
+namespace InventoryManagementSystem.Controllers
 {
     public class HomeController : Controller
     {
@@ -21,12 +21,6 @@ namespace Inventory_Management_System.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
