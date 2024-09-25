@@ -12,16 +12,11 @@ namespace InventoryManagementSystem.Service.Services.Contracts
 {
     public interface ICategoryService
     {
-        public interface ICategoryService
-        {
-            Task<CategoryData> GetAllAsync(CategoryQueryParameters? queryParameters, int pageNumber, int pageSize);
-            Task<Category> GetByIdAsync(Expression<Func<Category, bool>> filter);
-
-            Task<bool> IsExistsAsync(Expression<Func<Category, bool>> filter);
-            Task<bool> AddAsync(Category Category);
-            Task<bool> DeleteAsync(Guid id);
-            Task<bool> UpdateAsync(Category Category);
-
-        }
+        Task<CategoryData> GetAllAsync(CategoryQueryParameters? queryParameters, int pageNumber, int pageSize);
+        Task<Category> GetByIdAsync(Expression<Func<Category, bool>> filter);
+        Task<bool> IsExistsAsync(Expression<Func<Category, bool>> filter);
+        Task<bool> AddAsync(Category Category);
+        Task<bool> DeleteAsync(Guid id);
+        Task<bool> UpdateAsync(Category Category);
     }
 }
