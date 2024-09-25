@@ -1,0 +1,46 @@
+﻿@using InventoryManagementSystem.Data.Entities
+
+@model Category
+
+
+<div class="w-100 card border-0 p-2 mt-1">
+    <div class="card-header d-flex justify-content-between align-items-center bg-gradient" style="background-color : #16325B">
+        <h5 class="text-white fw-bold mb-0">Update Category</h5>
+        <button type="button" class="btn btn-outline-dark btn-sm text-white" onclick="window.location.href='@Url.Action("Index", "Category")'">Back To List</button>
+    </div>
+
+    <div class="card-body border">
+        <form asp-controller="Category" asp-action="Edit" method="post" class="row" enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-group row">
+                <div class="col-sm-7">
+                    <div class="p-2 " hidden>
+                        <input asp-for="Id" class="form-control border" placeholder="Enter First Name" required />
+                    </div>
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Name<span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control border" placeholder="" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle"></i> Update
+                    </button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Category" asp-action="Index" class="btn btn-secondary w-100">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
