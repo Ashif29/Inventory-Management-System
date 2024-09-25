@@ -1,4 +1,7 @@
 using InventoryManagementSystem.Data.DataAccess;
+using InventoryManagementSystem.Data.Repositories.Core;
+using InventoryManagementSystem.Service.Services.Contracts;
+using InventoryManagementSystem.Service.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSqlConnection"));
 });
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 builder.Services.AddControllersWithViews();

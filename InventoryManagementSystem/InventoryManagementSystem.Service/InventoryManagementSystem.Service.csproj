@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\InventoryManagementSystem.Data\InventoryManagementSystem.Data.csproj" />
   </ItemGroup>
 
