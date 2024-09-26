@@ -50,11 +50,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact</a>
-                    </li>
-                </ul>
+                <partial name="_RegisterLoginLogoutPartial" />
             </div>
         </div>
     </nav>
@@ -81,16 +77,6 @@
                 <li>
                     <a asp-controller="Category" asp-action="Index" class="nav-link px-0 align-middle">
                         <i class="bi bi-person-plus-fill"></i> <span class="ms-1 d-none d-sm-inline">Categories</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Account" asp-action="Login" class="nav-link px-0 align-middle">
-                        <i class="bi bi-person-plus-fill"></i> <span class="ms-1 d-none d-sm-inline">Login</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="Account" asp-action="Register" class="nav-link px-0 align-middle">
-                        <i class="bi bi-person-plus-fill"></i> <span class="ms-1 d-none d-sm-inline">Register</span>
                     </a>
                 </li>
             </ul>
