@@ -1,0 +1,63 @@
+﻿@using InventoryManagementSystem.Web.ViewModels
+@model RegisterVM
+
+
+<div class="w-100 card border-0 p-2 mt-1">
+    <div class="card-header d-flex justify-content-between align-items-center bg-gradient" style="background-color : #16325B">
+        <h5 class="text-white fw-bold mb-0">Register</h5>
+        <button type="button" class="btn btn-outline-dark btn-sm text-white" onclick="window.location.href='@Url.Action("Index", "Home")'">Back</button>
+    </div>
+
+    <div class="card-body border">
+        <form asp-controller="Account" asp-action="Register" method="post" class="row" enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group row">
+                <div class="col-sm-7">
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Name<span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control border" placeholder="Enter Name" required />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Email<span class="text-danger">*</span></label>
+                        <input asp-for="Email" class="form-control border" placeholder="Enter Email" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Password<span class="text-danger">*</span></label>
+                        <input asp-for="Password" class="form-control border" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Confirm Password<span class="text-danger">*</span></label>
+                        <input asp-for="ConfirmPassword" class="form-control border" required />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle"></i> Register
+                    </button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary w-100">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

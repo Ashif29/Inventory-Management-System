@@ -17,6 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     // Password settings
+    options.User.RequireUniqueEmail = true;
     options.Password.RequiredLength = 6;
 
     // Lockout settings

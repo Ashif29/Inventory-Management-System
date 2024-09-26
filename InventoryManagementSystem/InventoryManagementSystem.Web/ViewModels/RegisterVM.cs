@@ -9,6 +9,9 @@ namespace InventoryManagementSystem.Web.ViewModels
         public string Email { get; set; }
 
         [Required]
+        public string Name { get; set; }
+
+        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
@@ -16,6 +19,7 @@ namespace InventoryManagementSystem.Web.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+        public string? RedirectUrl { get; set; }
     }
 }
 
