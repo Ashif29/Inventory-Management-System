@@ -106,16 +106,27 @@ namespace InventoryManagementSystem.Web.Controllers
                 TempData["error"] = "Product not found.";
                 return NotFound();
             }
+            var categoryList = await _categoryService.GetAllCategoryAsync();
 
-            return View(product);
+
+            var productVM = new ProductVM
+            {
+                Categories = categoryList.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Product = product
+            };
+            return View(productVM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Product product)
+        public async Task<IActionResult> Edit(ProductVM productVM)
         {
             if (ModelState.IsValid)
             {
-                var success = await _productService.UpdateAsync(product);
+                var success = await _productService.UpdateAsync(productVM.Product);
 
                 if (success)
                 {

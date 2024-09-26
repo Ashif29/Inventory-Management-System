@@ -1,0 +1,92 @@
+﻿@using InventoryManagementSystem.Web.ViewModels
+
+@model ProductVM
+
+
+
+<div class="w-100 card border-0 p-2 mt-1">
+    <div class="card-header d-flex justify-content-between align-items-center bg-gradient" style="background-color : #16325B">
+        <h5 class="text-white fw-bold mb-0">Update Product</h5>
+        <button type="button" class="btn btn-outline-dark btn-sm text-white" onclick="window.location.href='@Url.Action("Index", "Product")'">Back To List</button>
+    </div>
+
+    <div class="card-body border">
+        <form asp-controller="Product" asp-action="Edit" method="post" class="row" enctype="multipart/form-data">
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-group row">
+                <div class="col-sm-7">
+                    <div class="p-2 " hidden>
+                        <input asp-for="@Model.Product.Id" class="form-control border"required />
+                    </div>
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Name<span class="text-danger">*</span></label>
+                        <input asp-for="@Model.Product.Name" class="form-control border" placeholder="Enter Product Name" required />
+                        <span asp-validation-for="@Model.Product.Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Description<span class="text-danger">*</span></label>
+                        <textarea asp-for="@Model.Product.Description" class="form-control border" rows="4" placeholder="Enter Description" required></textarea>
+                        <span asp-validation-for="@Model.Product.Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Category<span class="text-danger">*</span></label>
+                        <select asp-for="@Model.Product.CategoryId" asp-items="Model.Categories" class="form-control border" required>
+                            <option value="">--Choose Category--</option>
+                        </select>
+                        <span asp-validation-for="@Model.Product.CategoryId" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Stock Level<span class="text-danger">*</span></label>
+                        <input asp-for="@Model.Product.StockLevel" class="form-control border" type="number" min="1" step="1" required />
+                        <span asp-validation-for="@Model.Product.StockLevel" class="text-danger"></span>
+                    </div>
+
+
+
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Price<span class="text-danger">*</span></label>
+                        <input asp-for="@Model.Product.Price" class="form-control border" type="number" placeholder="Enter Price" required />
+                        <span asp-validation-for="@Model.Product.Price" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-5">
+
+                    <div class="p-2 d-flex justify-content-center">
+                        <img src="@Model.Product.ImageUrl" width="60%" height="240px"
+                             style="border-radius:5px; border:1px solid #bbb9b9" />
+                    </div>
+                    <div class="p-2">
+                        <label class="col-form-label col-form-label-sm text-success">Upload Image</label>
+                        <input asp-for="@Model.Product.ImageUrl" name="ImageUrl" hidden class="form-control form-control-sm" accept="image/x-png,image/jpeg" />
+
+                        <input asp-for="@Model.Product.Image" name="Image" value="@Model.Product.ImageUrl" class="form-control form-control-sm" accept="image/x-png,image/jpeg" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-check-circle"></i> Update
+                    </button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-secondary w-100">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+
