@@ -11,5 +11,6 @@ namespace InventoryManagementSystem.Service.Services.Contracts
     public interface IUserService
     {
         Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync();
+        Task<bool> AssignRoleToUserAsync(string userId, string role);
     }
 }

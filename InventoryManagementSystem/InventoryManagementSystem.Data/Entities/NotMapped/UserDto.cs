@@ -12,5 +12,6 @@ namespace InventoryManagementSystem.Data.Entities.NotMapped
         public string Email { get; set; }
         public string FullName { get; set; }
         public string Role { get; set; }
+
     }
 }

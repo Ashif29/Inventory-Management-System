@@ -28,7 +28,7 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         public async Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync()
         {
             var users = _userManager.Users.ToList();
-            var usersDtoList = new List<UserDto>();
+            var usersList = new List<UserDto>();
 
             foreach (var user in users)
             {
@@ -39,19 +39,34 @@ namespace InventoryManagementSystem.Service.Services.Implementations
                 if (string.IsNullOrEmpty(userRole))
                 {
                     userRole = UserRoles.None; // Assign default role
-                    //await _userManager.AddToRoleAsync(user, userRole); // Optional
+                    await _userManager.AddToRoleAsync(user, userRole); // Optional
                 }
 
-                usersDtoList.Add(new UserDto
+                usersList.Add(new UserDto
                 {
                     Id = user.Id,
                     Email = user.Email,
                     FullName = user.FullName, // Assuming FullName is a property in ApplicationUser
-                    Role = userRole
+                    Role = userRole,
                 });
             }
 
-            return usersDtoList;
+            return usersList;
+        }
+
+        public async Task<bool> AssignRoleToUserAsync(string userId, string role)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            await _userManager.AddToRoleAsync(user, role);
+
+            return true;
         }
     }
 

@@ -1,6 +1,5 @@
 ﻿@using InventoryManagementSystem.Web.ViewModels
-@model IEnumerable<UserVM>
-
+@model UserVM
 
 <div class="w-100 card border-0 p-2 mt-1">
 
@@ -19,21 +18,22 @@
                         <span>Email</span>
                     </th>
                     <th class="text-center align-middle">
-                        <span>Role</span>
+                        <span>Role / Assign Role</span>
                     </th>
                 </tr>
             </thead>
-
-
             <tbody>
-                @foreach (var obj in Model)
+                @foreach (var obj in Model.Users)
                 {
                     <tr>
                         <td class="text-center align-middle">@obj.FullName</td>
                         <td class="text-center align-middle">@obj.Email</td>
                         <td>
                             <div class="w-75 btn-group" role="group">
-                                <button type="button" class="btn @(obj.Role == "None" ? "bg-warning" : "bg-primary") btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@obj.Id">
+                                <button type="button" class="btn @(obj.Role == "None" ? "bg-warning" : "bg-primary") btn-sm"
+                                        data-bs-toggle="modal" data-bs-target="#assignRoleModal"
+                                        data-id="@obj.Id" data-role="@obj.Role">
+                                    <i class="bi bi-pencil-square"></i>
                                     @if (obj.Role == "None")
                                     {
                                         @:No Role Assigned
@@ -45,20 +45,74 @@
                                 </button>
                             </div>
                         </td>
-                        @* <td class="text-center align-middle">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Category" asp-action="Edit" asp-route-CategoryId="@obj.Id" class="btn btn-primary mx-2">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@obj.Id">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
-                        </td> *@
                     </tr>
-
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="assignRoleModal" tabindex="-1" aria-labelledby="assignRoleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignRoleModalLabel">Assign Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="userId" />
+                <div class="mb-3">
+                    <label for="roleSelect" class="form-label">Select Role</label>
+                    <select id="roleSelect" class="form-select">
+                        @foreach (var role in Model.RolesList)
+                        {
+                            <option value="@role.Value">@role.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submitRoleBtn">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+    <script>
+        $('#assignRoleModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); 
+            var userId = button.data('id');
+            var userRole = button.data('role');
+
+            var modal = $(this);
+            modal.find('#userId').val(userId);
+            modal.find('#roleSelect').val(userRole);
+        });
+
+        $('#submitRoleBtn').on('click', function () {
+            var userId = $('#userId').val();
+            var selectedRole = $('#roleSelect').val();
+
+            $.ajax({
+                url: '@Url.Action("AssignRole", "User")',
+                type: 'POST',
+                data: {
+                    userId: userId,
+                    role: selectedRole
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error("Error assigning role:", error);
+                }
+            });
+        });
+    </script>
+}
