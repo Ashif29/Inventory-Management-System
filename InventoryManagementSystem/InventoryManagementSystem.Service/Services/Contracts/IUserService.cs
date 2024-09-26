@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.Data.Entities;
+using InventoryManagementSystem.Data.Entities.NotMapped;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace InventoryManagementSystem.Service.Services.Contracts
 {
     public interface IUserService
     {
-        Task<IEnumerable<ApplicationUser>> GetAllAsync(string? includeProperties = null);
+        Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync();
     }
 }

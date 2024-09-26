@@ -1,5 +1,6 @@
 using InventoryManagementSystem.Data.DataAccess;
 using InventoryManagementSystem.Data.Entities;
+using InventoryManagementSystem.Data.Entities.NotMapped;
 using InventoryManagementSystem.Data.Repositories.Core;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Service.Services.Implementations;
@@ -34,13 +35,23 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 
+builder.Services.AddScoped<RoleSeeder>();
+
+
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+var app = builder.Build(); 
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleSeeder = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
+    await roleSeeder.SeedRolesAsync();
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
+
+
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
@@ -58,3 +69,28 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+
+async Task SeedRoles(IServiceProvider serviceProvider)
+{
+    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roleNames = {
+        UserRoles.Admin,
+        UserRoles.Salesman,
+        UserRoles.Purchaser,
+        UserRoles.Supplier,
+        UserRoles.Consumer,
+        UserRoles.None
+    };
+
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+}

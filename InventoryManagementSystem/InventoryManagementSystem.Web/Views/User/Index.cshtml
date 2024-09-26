@@ -1,0 +1,64 @@
+﻿@using InventoryManagementSystem.Web.ViewModels
+@model IEnumerable<UserVM>
+
+
+<div class="w-100 card border-0 p-2 mt-1">
+
+    <div class="card-header d-flex justify-content-between align-items-centerbg-gradient" style="background-color : #16325B">
+        <h5 class="text-white fw-bold mb-0">User List</h5>
+    </div>
+
+    <div class="card-body border">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th class="text-center align-middle">
+                        <span>Name</span>
+                    </th>
+                    <th class="text-center align-middle">
+                        <span>Email</span>
+                    </th>
+                    <th class="text-center align-middle">
+                        <span>Role</span>
+                    </th>
+                </tr>
+            </thead>
+
+
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td class="text-center align-middle">@obj.FullName</td>
+                        <td class="text-center align-middle">@obj.Email</td>
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <button type="button" class="btn @(obj.Role == "None" ? "bg-warning" : "bg-primary") btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@obj.Id">
+                                    @if (obj.Role == "None")
+                                    {
+                                        @:No Role Assigned
+                                    }
+                                    else
+                                    {
+                                        @obj.Role
+                                    }
+                                </button>
+                            </div>
+                        </td>
+                        @* <td class="text-center align-middle">
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Category" asp-action="Edit" asp-route-CategoryId="@obj.Id" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@obj.Id">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </div>
+                        </td> *@
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

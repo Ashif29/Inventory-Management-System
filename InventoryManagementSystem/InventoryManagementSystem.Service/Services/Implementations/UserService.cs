@@ -1,6 +1,7 @@
 ﻿using InventoryManagementSystem.Data.Entities;
 using InventoryManagementSystem.Data.Repositories.Core;
 using InventoryManagementSystem.Service.Services.Contracts;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,49 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Service.Services.Implementations
 {
+    using InventoryManagementSystem.Data.Entities.NotMapped;
+    using Microsoft.AspNetCore.Identity;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
     public class UserService : IUserService
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(UserManager<ApplicationUser> userManager)
         {
-            _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllAsync(string? includeProperties = null)
+        public async Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync()
         {
-            return await _unitOfWork.UserRepository.GetAllAsync();
+            var users = _userManager.Users.ToList();
+            var usersDtoList = new List<UserDto>();
+
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                string userRole = roles.FirstOrDefault();
+
+                // Assign a default role if none exists
+                if (string.IsNullOrEmpty(userRole))
+                {
+                    userRole = UserRoles.None; // Assign default role
+                    //await _userManager.AddToRoleAsync(user, userRole); // Optional
+                }
+
+                usersDtoList.Add(new UserDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FullName = user.FullName, // Assuming FullName is a property in ApplicationUser
+                    Role = userRole
+                });
+            }
+
+            return usersDtoList;
         }
     }
+
 }
