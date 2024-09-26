@@ -12,8 +12,8 @@ namespace InventoryManagementSystem.Service.Services.Contracts
 {
     public interface IProductService
     {
-        Task<ProductsData> GetAllAsync(ProductQueryParameters? queryParameters, int pageNumber, int pageSize);
-        Task<Product> GetByIdAsync(Expression<Func<Product, bool>> filter);
+        Task<ProductsData> GetAllAsync(ProductQueryParameters? queryParameters, int pageNumber, int pageSize, string? includeProperties = null);
+        Task<Product> GetByIdAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null);
 
         Task<bool> IsExistsAsync(Expression<Func<Product, bool>> filter);
         Task<bool> AddAsync(Product product, IFormFile? imageFile);

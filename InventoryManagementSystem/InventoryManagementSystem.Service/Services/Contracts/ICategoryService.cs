@@ -13,6 +13,8 @@ namespace InventoryManagementSystem.Service.Services.Contracts
     public interface ICategoryService
     {
         Task<CategoryData> GetAllAsync(CategoryQueryParameters? queryParameters, int pageNumber, int pageSize);
+
+        Task<IEnumerable<Category>> GetAllCategoryAsync();
         Task<Category> GetByIdAsync(Expression<Func<Category, bool>> filter);
         Task<bool> IsExistsAsync(Expression<Func<Category, bool>> filter);
         Task<bool> AddAsync(Category Category);

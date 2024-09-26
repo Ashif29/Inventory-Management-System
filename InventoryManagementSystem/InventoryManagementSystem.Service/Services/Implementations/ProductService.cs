@@ -57,12 +57,12 @@ namespace InventoryManagementSystem.Service.Services.Implementations
             return await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<ProductsData> GetAllAsync(ProductQueryParameters? queryParameters, int pageNumber, int pageSize)
+        public async Task<ProductsData> GetAllAsync(ProductQueryParameters? queryParameters, int pageNumber, int pageSize, string? includeProperties = null)
         {
             var filter = ApplySearching(queryParameters);
 
             // Retrieve filtered products
-            var products = await _unitOfWork.ProductRepository.GetAllAsync(filter);
+            var products = await _unitOfWork.ProductRepository.GetAllAsync(filter, includeProperties);
 
             // Apply sorting
             products = ApplySorting(products, queryParameters);
@@ -77,9 +77,9 @@ namespace InventoryManagementSystem.Service.Services.Implementations
             };
         }
 
-        public async Task<Product> GetByIdAsync(Expression<Func<Product, bool>> filter)
+        public async Task<Product> GetByIdAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null)
         {
-            return await _unitOfWork.ProductRepository.GetByIdAsync(filter);
+            return await _unitOfWork.ProductRepository.GetByIdAsync(filter, includeProperties);
         }
 
         public async Task<bool> UpdateAsync(Product product)

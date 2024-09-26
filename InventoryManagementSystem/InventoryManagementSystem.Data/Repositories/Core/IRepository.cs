@@ -9,8 +9,8 @@ namespace InventoryManagementSystem.Data.Repositories.Core
 {
     public interface IRepository<T> where T : class
     {
-        Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null);
-        Task<T> GetByIdAsync(Expression<Func<T, bool>> filter);
+        Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null);
+        Task<T> GetByIdAsync(Expression<Func<T, bool>> filter, string? includeProperties = null);
         Task<bool> IsExistsAsync(Expression<Func<T, bool>> filter);
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);

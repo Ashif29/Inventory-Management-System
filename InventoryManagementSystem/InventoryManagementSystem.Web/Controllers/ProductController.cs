@@ -3,16 +3,19 @@ using InventoryManagementSystem.Data.Entities.NotMapped;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
         public async Task<IActionResult> Index(ProductQueryParameters? queryParameters, int pageNumber)
         {
@@ -20,7 +23,7 @@ namespace InventoryManagementSystem.Web.Controllers
 
             int pageSize = 5;
 
-            var productsData = await _productService.GetAllAsync(queryParameters, pageNumber, pageSize);
+            var productsData = await _productService.GetAllAsync(queryParameters, pageNumber, pageSize, includeProperties: "Category");
 
             var productVM = new ProductVM
             {
@@ -32,17 +35,31 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(productVM);
         }
 
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            return View();
+            var categoryList = await _categoryService.GetAllCategoryAsync();
+
+
+            var productVM = new ProductVM
+            {
+                Categories = categoryList.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList(),
+                Product = new Product()
+            };
+            return View(productVM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(Product product)
+        public async Task<IActionResult> Add(ProductVM productVM)
         {
+            productVM.Product.Category = await _categoryService.GetByIdAsync(u => u.Id == productVM.Product.CategoryId);
+            
             if (ModelState.IsValid)
             {
-                bool IsNameExists = await _productService.IsExistsAsync(u => u.Name == product.Name);
+                bool IsNameExists = await _productService.IsExistsAsync(u => u.Name == productVM.Product.Name);
 
                 if (IsNameExists)
                 {
@@ -50,7 +67,7 @@ namespace InventoryManagementSystem.Web.Controllers
                     return View();
                 }
 
-                var success = await _productService.AddAsync(product, product.Image);
+                var success = await _productService.AddAsync(productVM.Product, productVM.Product.Image);
 
                 if (success)
                 {
@@ -82,7 +99,7 @@ namespace InventoryManagementSystem.Web.Controllers
 
         public async Task<IActionResult> Edit(Guid ProductId)
         {
-            var product = await _productService.GetByIdAsync(u => u.Id == ProductId);
+            var product = await _productService.GetByIdAsync(u => u.Id == ProductId, includeProperties: "Category");
 
             if (product == null)
             {

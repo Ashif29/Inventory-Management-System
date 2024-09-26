@@ -100,5 +100,10 @@ namespace InventoryManagementSystem.Service.Services.Implementations
 
             return categories;
         }
+
+        public async Task<IEnumerable<Category>> GetAllCategoryAsync()
+        {
+            return await _unitOfWork.CategoryRepository.GetAllAsync();
+        }
     }
 }

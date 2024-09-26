@@ -19,20 +19,34 @@ namespace InventoryManagementSystem.Data.Repositories.Core
             dbSet = _db.Set<T>();
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null)
+        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
             return query;
         }
 
-        public async Task<T> GetByIdAsync(Expression<Func<T, bool>> filter)
+        public async Task<T> GetByIdAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
 
             return await query.FirstOrDefaultAsync();
         }

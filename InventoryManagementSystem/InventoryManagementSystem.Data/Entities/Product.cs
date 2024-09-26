@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace InventoryManagementSystem.Data.Entities
 {
@@ -18,9 +19,11 @@ namespace InventoryManagementSystem.Data.Entities
 
         [StringLength(1000, ErrorMessage = "The description cannot exceed 500 characters.")]
         public string Description { get; set; }
-
-        [ForeignKey("Category")]
         public Guid CategoryId { get; set; }
+
+        [ValidateNever]
+        [ForeignKey("CategoryId")]
+        public Category Category { get; set; }
 
         [Required(ErrorMessage = "Stock level is required")]
         [Range(0, int.MaxValue, ErrorMessage = "Stock level must be a non-negative integer.")]
@@ -34,6 +37,6 @@ namespace InventoryManagementSystem.Data.Entities
         public IFormFile? Image { get; set; }
         [Display(Name = "Photo")]
         public string? ImageUrl { get; set; }
-        public virtual Category Category { get; set; }
+
     }
 }
