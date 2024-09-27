@@ -5,14 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using InventoryManagementSystem.Data.Entities.Core;
 
 namespace InventoryManagementSystem.Data.Entities
 {
-    public class Supplier
+    public class Supplier : BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
-
         [ForeignKey("User")]
         public string UserId { get; set; }
 

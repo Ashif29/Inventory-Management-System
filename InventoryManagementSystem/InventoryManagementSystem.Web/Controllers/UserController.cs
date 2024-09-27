@@ -5,16 +5,19 @@ using InventoryManagementSystem.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly ISupplierService _supplierService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ISupplierService supplierService)
         {
             _userService = userService;
+            _supplierService = supplierService;
         }
 
         public async Task<IActionResult> Index()
@@ -53,7 +56,24 @@ namespace InventoryManagementSystem.Web.Controllers
                 return NotFound();
             }
 
+            bool isAdded = await AddUserToRelatedTableAsync(userId, role);
+
+            /*if (!isAdded)
+            {
+                return BadRequest("User could not be added.");
+            }*/
+
             return Ok();
+        }
+
+        private async Task<bool> AddUserToRelatedTableAsync(string userId, string role)
+        {
+            if (role == UserRoles.Supplier)
+            {
+                return await _supplierService.AddAsync(userId);
+            }
+            return false;
+                
         }
     }
 
