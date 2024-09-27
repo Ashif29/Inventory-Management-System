@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Data.Repositories.Contracts;
+﻿using InventoryManagementSystem.Data.Entities;
+using InventoryManagementSystem.Data.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         IProductRepository ProductRepository { get; }
         ICategoryRepository CategoryRepository { get; }
         ISupplierRepository SupplierRepository { get; }
+        IPurchaserRepository PurchaserRepository { get; }
         Task<bool> CompleteAsync();
     }
 }

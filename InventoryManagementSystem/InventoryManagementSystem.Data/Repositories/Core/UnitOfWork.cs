@@ -18,12 +18,15 @@ namespace InventoryManagementSystem.Data.Repositories.Core
 
         public ISupplierRepository SupplierRepository { get; private set; }
 
+        public IPurchaserRepository PurchaserRepository { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             this.ProductRepository = new ProductRepository(_db);
             this.CategoryRepository = new CategoryRepository(_db);
             this.SupplierRepository = new SupplierRepository(_db);
+            this.PurchaserRepository = new PurchaserRepository(_db);
         }
 
         public async Task<bool> CompleteAsync()
