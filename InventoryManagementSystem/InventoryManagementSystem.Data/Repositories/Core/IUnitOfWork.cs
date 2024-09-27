@@ -11,6 +11,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
     {
         IProductRepository ProductRepository { get; }
         ICategoryRepository CategoryRepository { get; }
+        ISupplierRepository SupplierRepository { get; }
         Task<bool> CompleteAsync();
     }
 }

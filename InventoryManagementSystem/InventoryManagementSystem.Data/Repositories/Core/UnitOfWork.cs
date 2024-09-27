@@ -16,11 +16,14 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         public IProductRepository ProductRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
 
+        public ISupplierRepository SupplierRepository { get; private set; }
+
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             this.ProductRepository = new ProductRepository(_db);
             this.CategoryRepository = new CategoryRepository(_db);
+            this.SupplierRepository = new SupplierRepository(_db);
         }
 
         public async Task<bool> CompleteAsync()
