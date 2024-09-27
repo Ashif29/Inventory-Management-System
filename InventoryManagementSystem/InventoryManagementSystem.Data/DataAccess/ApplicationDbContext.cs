@@ -19,6 +19,8 @@ namespace InventoryManagementSystem.Data.DataAccess
         public DbSet<Category> Categories { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Purchaser> Purchasers { get; set; }
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
