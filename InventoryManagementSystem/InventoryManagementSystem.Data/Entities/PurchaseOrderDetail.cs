@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.Data.Entities.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,14 +16,14 @@ namespace InventoryManagementSystem.Data.Entities
         public Guid PurchaseOrderId { get; set; }
 
         [ForeignKey("PurchaseOrderId")]
-        // Navigation property to the PurchaseOrder
+        [ValidateNever]
         public virtual PurchaseOrder PurchaseOrder { get; set; }
 
         [Required]
         public Guid ProductId { get; set; }
 
         [ForeignKey("ProductId")]
-        // Navigation property to the Product
+        [ValidateNever]
         public Product Product { get; set; }
         
 

@@ -15,10 +15,10 @@ namespace InventoryManagementSystem.Data.Repositories.Core
 
         public IProductRepository ProductRepository { get; private set; }
         public ICategoryRepository CategoryRepository { get; private set; }
-
         public ISupplierRepository SupplierRepository { get; private set; }
-
         public IPurchaserRepository PurchaserRepository { get; private set; }
+        public IPurchaseOrderRepository PurchaseOrderRepository { get; private set; }
+        public IPurchaseOrderDetailRepository PurchaseOrderDetailRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -27,11 +27,12 @@ namespace InventoryManagementSystem.Data.Repositories.Core
             this.CategoryRepository = new CategoryRepository(_db);
             this.SupplierRepository = new SupplierRepository(_db);
             this.PurchaserRepository = new PurchaserRepository(_db);
+            this.PurchaseOrderRepository = new PurchaseOrderRepository(_db);
+            this.PurchaseOrderDetailRepository = new PurchaseOrderDetailRepository(_db);
         }
 
         public async Task<bool> CompleteAsync()
         {
-
             return await _db.SaveChangesAsync() > 0;
         }
     }

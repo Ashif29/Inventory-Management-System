@@ -9,7 +9,6 @@ namespace InventoryManagementSystem.Data.Enums
     public enum PurchaseOrderStatus
     {
         Pending,
-        InProgress,
         Delivered,
         Verified
     }

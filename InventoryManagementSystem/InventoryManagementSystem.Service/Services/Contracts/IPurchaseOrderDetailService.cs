@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Service.Services.Contracts
 {
-    public interface ISupplierService
+    public interface IPurchaseOrderDetailService
     {
-        Task<bool> AddAsync(string  userId);
-        Task<IEnumerable<Supplier>> GetAllAsync();
+        Task<bool> AddAsync(PurchaseOrderDetail purchaseOrderDetail);
     }
 }

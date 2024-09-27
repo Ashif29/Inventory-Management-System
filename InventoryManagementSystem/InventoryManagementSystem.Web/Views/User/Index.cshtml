@@ -30,17 +30,17 @@
                         <td class="text-center align-middle">@obj.Email</td>
                         <td>
                             <div class="w-75 btn-group" role="group">
-                                <button type="button" class="btn @(obj.Role == "None" ? "bg-warning" : "bg-primary") btn-sm"
+                                <button type="button" class="btn btn-sm"
                                         data-bs-toggle="modal" data-bs-target="#assignRoleModal"
                                         data-id="@obj.Id" data-role="@obj.Role">
                                     <i class="bi bi-pencil-square"></i>
                                     @if (obj.Role == "None")
                                     {
-                                        @:No Role Assigned
+                                        <span class="badge bg-danger"> No Role Assigned </span>
                                     }
                                     else
                                     {
-                                        @obj.Role
+                                        <span class="badge bg-success"> @obj.Role </span>
                                     }
                                 </button>
                             </div>

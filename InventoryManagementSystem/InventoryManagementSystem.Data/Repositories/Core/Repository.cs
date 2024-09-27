@@ -50,6 +50,17 @@ namespace InventoryManagementSystem.Data.Repositories.Core
 
             return await query.FirstOrDefaultAsync();
         }
+        public async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null)
+        {
+            if (filter != null)
+            {
+                return await dbSet.CountAsync(filter);
+            }
+            else
+            {
+                return await dbSet.CountAsync();
+            }
+        }
 
         public async Task AddAsync(T entity)
         {

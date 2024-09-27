@@ -77,6 +77,11 @@ namespace InventoryManagementSystem.Service.Services.Implementations
             };
         }
 
+        public async Task<IEnumerable<Product>> GetAllAsync()
+        {
+            return await _unitOfWork.ProductRepository.GetAllAsync();
+        }
+
         public async Task<Product> GetByIdAsync(Expression<Func<Product, bool>> filter, string? includeProperties = null)
         {
             return await _unitOfWork.ProductRepository.GetByIdAsync(filter, includeProperties);

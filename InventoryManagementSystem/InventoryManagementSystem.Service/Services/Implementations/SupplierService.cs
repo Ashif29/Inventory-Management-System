@@ -42,5 +42,10 @@ namespace InventoryManagementSystem.Service.Services.Implementations
             await _unitOfWork.SupplierRepository.AddAsync(supplier);
             return await _unitOfWork.CompleteAsync();
         }
+
+        public async Task<IEnumerable<Supplier>> GetAllAsync()
+        {
+            return await _unitOfWork.SupplierRepository.GetAllAsync();
+        }
     }
 }
