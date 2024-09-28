@@ -1,0 +1,143 @@
+﻿@using InventoryManagementSystem.Web.ViewModels
+
+@model PurchaseOrderDetailsVM
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        /* Print Styles */
+        @@media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .card-header {
+                background-color: #f8f9fa !important;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            td, th {
+                padding: 8px;
+            }
+        }
+
+        @@page {
+            size: A4;
+            margin: 0;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .title {
+            padding: 0;
+            margin: 0;
+            font-size: 18pt;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container p-5">
+        <div class="row border-bottom pb-4 mb-4">
+            <div class="col-md-12 text-center">
+                <h1 class="fw-bold">Invoice (Purchase)</h1>
+            </div>
+        </div>
+
+        <div class="row border-bottom pb-4 mb-4">
+            <div class="col-md-3 text-start">
+                <p><strong>Order Code:</strong> @Model.POCode</p>
+                <p><strong>Status:</strong> @Model.Status</p>
+                <p><strong>Delivery Date:</strong> @(Model.DeliveryDate?.ToString("dd MMM yyyy") ?? "N/A")</p>
+            </div>
+            <div class="col-md-6 text-start"></div>
+            <div class="col-md-3 text-start">
+                <p><strong>Date:</strong> @(DateTime.Now.ToString("dd MMM yyyy"))</p>
+                <p><strong>Invoice No:</strong> @(Guid.NewGuid().ToString().Substring(0, 8))</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3 text-start">
+                <h5 class="fw-bold">Purchaser Details</h5>
+                <p><strong>Name:</strong> @Model.PurchaserName</p>
+                <p><strong>Email:</strong> @Model.PurchaserEmail</p>
+            </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-3 text-start">
+                <h5 class="fw-bold">Supplier Details</h5>
+                <p><strong>Name:</strong> @Model.SupplierName</p>
+                <p><strong>Email:</strong> @Model.SupplierEmail</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.PurchaseOrderItems.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model.PurchaseOrderItems[i].ProductName</td>
+                            <td>৳ @Model.PurchaseOrderItems[i].PurchasePrice.ToString("N2")</td>
+                            <td>@Model.PurchaseOrderItems[i].Quantity</td>
+                            <td>৳ @(Model.PurchaseOrderItems[i].TotalCost.ToString("N2"))</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                        <td class="fw-bold">৳ @Model.TotalCost.ToString("N2")</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="mt-4">
+            <p><strong>Notes:</strong> @(Model.Notes ?? "No additional notes")</p>
+        </div>
+
+        <!-- Print Button (hidden during printing) -->
+        <div class="text-right no-print">
+            <button class="btn btn-primary" onclick="window.print()">Print Invoice</button>
+        </div>
+
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

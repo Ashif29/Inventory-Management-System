@@ -113,6 +113,7 @@ namespace InventoryManagementSystem.Web.Controllers
 
             var model = new PurchaseOrderDetailsVM
             {
+                Id = orderDetails.Id,
                 POCode = orderDetails.POCode,
                 PurchaserName = orderDetails.Purchaser.FullName, 
                 PurchaserEmail = orderDetails.Purchaser.Email, 
@@ -131,5 +132,32 @@ namespace InventoryManagementSystem.Web.Controllers
             };
             return View(model);
         }
+
+
+        public async Task<IActionResult> GenerateInvoicePdf(Guid OrderId)
+        {
+            var orderDetails = await _purchaseOrderService.OrderDetails(OrderId);
+
+            var model = new PurchaseOrderDetailsVM
+            {
+                POCode = orderDetails.POCode,
+                PurchaserName = orderDetails.Purchaser.FullName,
+                PurchaserEmail = orderDetails.Purchaser.Email,
+                SupplierName = orderDetails.Supplier.FullName,
+                SupplierEmail = orderDetails.Supplier.Email,
+                DeliveryDate = orderDetails.DeliveryDate,
+                Status = orderDetails.Status,
+                Notes = orderDetails.Notes,
+                TotalCost = orderDetails.TotalCost,
+                PurchaseOrderItems = orderDetails.PurchaseOrderDetails.Select(detail => new PurchaseOrderItemVM
+                {
+                    ProductName = detail.Product.Name,
+                    PurchasePrice = detail.PurchasePrice,
+                    Quantity = detail.Quantity
+                }).ToList()
+            };
+            return View(model);
+        }
+
     }
 }

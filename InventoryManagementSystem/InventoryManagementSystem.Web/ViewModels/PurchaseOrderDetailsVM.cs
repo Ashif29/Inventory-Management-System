@@ -4,6 +4,7 @@ namespace InventoryManagementSystem.Web.ViewModels
 {
     public class PurchaseOrderDetailsVM
     {
+        public Guid Id { get; set; }
         public string POCode { get; set; }
         public string PurchaserName { get; set; }
         public string PurchaserEmail { get; set; }

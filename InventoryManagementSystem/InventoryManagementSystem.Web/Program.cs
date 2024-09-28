@@ -2,7 +2,6 @@ using InventoryManagementSystem.Data.DataAccess;
 using InventoryManagementSystem.Data.Entities;
 using InventoryManagementSystem.Data.Entities.NotMapped;
 using InventoryManagementSystem.Data.Repositories.Core;
-using InventoryManagementSystem.Service.Extentions;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Service.Services.Implementations;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +29,6 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<PdfService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
