@@ -38,6 +38,7 @@ builder.Services.AddScoped<IPurchaserService, PurchaserService>();
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<IPurchaseOrderDetailService, PurchaseOrderDetailService>();
 builder.Services.AddScoped<IConsumerService, ConsumerService>();
+builder.Services.AddScoped<ISalesmanService, SalesmanService>();
 
 
 builder.Services.AddScoped<RoleSeeder>();
