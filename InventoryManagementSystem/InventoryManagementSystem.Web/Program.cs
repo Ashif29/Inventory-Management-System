@@ -30,16 +30,22 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IPurchaserService, PurchaserService>();
-builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
-builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
-builder.Services.AddScoped<IPurchaseOrderDetailService, PurchaseOrderDetailService>();
 builder.Services.AddScoped<IConsumerService, ConsumerService>();
 builder.Services.AddScoped<ISalesmanService, SalesmanService>();
+
+builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
+builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
+
+builder.Services.AddScoped<IPurchaseOrderDetailService, PurchaseOrderDetailService>();
+builder.Services.AddScoped<ISalesOrderDetailService, SalesOrderDetailService>();
 
 
 builder.Services.AddScoped<RoleSeeder>();
