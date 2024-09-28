@@ -21,6 +21,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         public IPurchaseOrderDetailRepository PurchaseOrderDetailRepository { get; private set; }
 
         public IConsumerRepository ConsumerRepository { get; private set; }
+        public ISalesmanRepository SalesmanRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -32,6 +33,8 @@ namespace InventoryManagementSystem.Data.Repositories.Core
             this.PurchaseOrderRepository = new PurchaseOrderRepository(_db);
             this.PurchaseOrderDetailRepository = new PurchaseOrderDetailRepository(_db);
             this.ConsumerRepository = new ConsumerRepository(_db);
+            this.SalesmanRepository = new SalesmanRepository(_db);
+
         }
 
         public async Task<bool> CompleteAsync()
