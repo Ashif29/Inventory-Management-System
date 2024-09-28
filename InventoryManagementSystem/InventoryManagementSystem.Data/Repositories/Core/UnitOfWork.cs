@@ -22,6 +22,8 @@ namespace InventoryManagementSystem.Data.Repositories.Core
 
         public IConsumerRepository ConsumerRepository { get; private set; }
         public ISalesmanRepository SalesmanRepository { get; private set; }
+        ISalesOrderRepository SalesOrderRepository { get; }
+
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -34,6 +36,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
             this.PurchaseOrderDetailRepository = new PurchaseOrderDetailRepository(_db);
             this.ConsumerRepository = new ConsumerRepository(_db);
             this.SalesmanRepository = new SalesmanRepository(_db);
+            this.SalesOrderRepository = new SalesOrderRepository(_db);
 
         }
 
