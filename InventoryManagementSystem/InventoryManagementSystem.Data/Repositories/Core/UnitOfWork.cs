@@ -19,6 +19,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         public IPurchaserRepository PurchaserRepository { get; private set; }
         public IPurchaseOrderRepository PurchaseOrderRepository { get; private set; }
         public IPurchaseOrderDetailRepository PurchaseOrderDetailRepository { get; private set; }
+        public ISalesOrderDetailRepository SalesOrderDetailRepository { get; private set; }
 
         public IConsumerRepository ConsumerRepository { get; private set; }
         public ISalesmanRepository SalesmanRepository { get; private set; }
@@ -34,6 +35,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
             this.PurchaserRepository = new PurchaserRepository(_db);
             this.PurchaseOrderRepository = new PurchaseOrderRepository(_db);
             this.PurchaseOrderDetailRepository = new PurchaseOrderDetailRepository(_db);
+            this.SalesOrderDetailRepository = new SalesOrderDetailRepository(_db);
             this.ConsumerRepository = new ConsumerRepository(_db);
             this.SalesmanRepository = new SalesmanRepository(_db);
             this.SalesOrderRepository = new SalesOrderRepository(_db);

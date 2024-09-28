@@ -16,6 +16,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         IPurchaserRepository PurchaserRepository { get; }
         IPurchaseOrderRepository PurchaseOrderRepository { get; }
         IPurchaseOrderDetailRepository PurchaseOrderDetailRepository { get; }
+        ISalesOrderDetailRepository SalesOrderDetailRepository { get; }
         IConsumerRepository ConsumerRepository { get; }
         ISalesmanRepository SalesmanRepository { get; }
         ISalesOrderRepository SalesOrderRepository { get; }
