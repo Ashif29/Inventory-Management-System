@@ -14,16 +14,22 @@ namespace InventoryManagementSystem.Web.Controllers
         private readonly IUserService _userService;
         private readonly ISupplierService _supplierService;
         private readonly IPurchaserService _purchaserService;
+        private readonly IConsumerService _consumerService;
+        private readonly ISalesmanService _salesmanService;
 
         public UserController(
             IUserService userService, 
             ISupplierService supplierService,
-            IPurchaserService purchaserService
+            IPurchaserService purchaserService,
+            IConsumerService consumerService,
+            ISalesmanService salesmanService
             )
         {
             _userService = userService;
             _supplierService = supplierService;
             _purchaserService = purchaserService;
+            _salesmanService = salesmanService;
+            _consumerService = consumerService;
         }
 
         public async Task<IActionResult> Index()
@@ -81,6 +87,14 @@ namespace InventoryManagementSystem.Web.Controllers
             if (role == UserRoles.Purchaser)
             {
                 return await _purchaserService.AddAsync(userId);
+            }
+            if (role == UserRoles.Consumer)
+            {
+                return await _consumerService.AddAsync(userId);
+            }
+            if (role == UserRoles.Salesman)
+            {
+                return await _salesmanService.AddAsync(userId);
             }
             return false;
                 
