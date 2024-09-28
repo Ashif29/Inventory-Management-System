@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Data.Enums
 {
-    public enum PurchaseOrderStatus
+    public enum OrderStatus
     {
         Pending,
         Delivered,
-        Verified
+        Verified,
+        Canceiled
     }
 }

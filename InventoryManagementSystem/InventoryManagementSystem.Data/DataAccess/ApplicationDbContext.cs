@@ -17,10 +17,16 @@ namespace InventoryManagementSystem.Data.DataAccess
         }
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Purchaser> Purchasers { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+
+        public DbSet<Salesman> Salesmens { get; set; }
+        public DbSet<Consumer> Consumers { get; set; }
+        public DbSet<SalesOrder> SalesOrders { get; set; }
+        public DbSet<SalesOrderDetail> SalesOrderDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

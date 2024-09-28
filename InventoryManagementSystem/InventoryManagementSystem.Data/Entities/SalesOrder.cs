@@ -1,4 +1,5 @@
 ﻿using InventoryManagementSystem.Data.Entities.Core;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,41 +8,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using InventoryManagementSystem.Data.Enums;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace InventoryManagementSystem.Data.Entities
 {
-    public class PurchaseOrder : BaseEntity
+    public class SalesOrder : BaseEntity
     {
-
         [Required]
         [ValidateNever]
-        public string POCode { get; set; }
+        public string SOCode { get; set; }
 
         [Required]
-        public Guid PurchaserId { get; set; }
+        public Guid SalesmanId { get; set; }
 
-        [ForeignKey("PurchaserId")]
+        [ForeignKey("SalesmanId")]
         [ValidateNever]
-        public Purchaser Purchaser { get; set; }
+        public Salesman Salesman { get; set; }
 
         [Required]
-        public Guid SupplierId { get; set; }
+        public Guid ConsumerId { get; set; }
 
-        [ForeignKey("SupplierId")]
+        [ForeignKey("ConsumerId")]
         [ValidateNever]
-        public Supplier Supplier { get; set; }
+        public Consumer Consumer { get; set; }
 
         public DateTime? DeliveryDate { get; set; }
 
         [Required]
-        public OrderStatus Status { get; set; } 
+        public OrderStatus Status { get; set; }
 
         public string? Notes { get; set; }
 
-        public Double TotalCost { get; set; }
+        public double TotalCost { get; set; }
 
         [ValidateNever]
-        public ICollection<PurchaseOrderDetail> PurchaseOrderDetails { get; set; } // Navigation property for details
+        public ICollection<SalesOrderDetail> SalesOrderDetails { get; set; } // Navigation property for order details
     }
+
 }

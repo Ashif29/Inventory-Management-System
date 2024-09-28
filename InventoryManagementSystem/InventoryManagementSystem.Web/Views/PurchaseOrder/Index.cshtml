@@ -45,17 +45,21 @@
                         <td class="text-center align-middle">@obj.Supplier.FullName</td>
                         <td class="text-center align-middle">@obj.TotalCost</td>
                         <td class="text-center align-middle">
-                            @if (obj.Status == PurchaseOrderStatus.Pending)
+                            @if (obj.Status == OrderStatus.Pending)
                             {
                                 <span class="badge bg-secondary">Pending</span>
                             }
-                            else if (obj.Status == PurchaseOrderStatus.Delivered)
+                            else if (obj.Status == OrderStatus.Delivered)
                             {
                                 <span class="badge bg-warning">Delivered</span>
                             }
-                            else if (obj.Status == PurchaseOrderStatus.Verified)
+                            else if (obj.Status == OrderStatus.Verified)
                             {
-                                <span class="badge bg-success">  Verified </span>
+                                <span class="badge bg-success"> Verified </span>
+                            }
+                            else if (obj.Status == OrderStatus.Canceiled)
+                            {
+                                <span class="badge bg-danger"> Canceiled </span>
                             }
                         </td>
                     </tr>
