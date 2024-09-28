@@ -16,5 +16,6 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);
         Task UpdateAsync(T entity);
+        
     }
 }

@@ -2,6 +2,7 @@
 using InventoryManagementSystem.Data.Entities;
 using InventoryManagementSystem.Data.Repositories.Contracts;
 using InventoryManagementSystem.Data.Repositories.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,18 @@ namespace InventoryManagementSystem.Data.Repositories.Implementations
         public PurchaseOrderRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+
+        public async Task<PurchaseOrder> OrderDetails(Guid OrderId)
+        {
+            var purchaseOrder = await _db.PurchaseOrders
+            .Include(po => po.PurchaseOrderDetails)
+            .ThenInclude(pod => pod.Product)
+            .Include(po => po.Purchaser)
+            .Include(po => po.Supplier)
+            .FirstOrDefaultAsync(po => po.Id == OrderId);
+
+            return purchaseOrder;
         }
     }
 }

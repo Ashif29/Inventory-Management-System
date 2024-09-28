@@ -12,31 +12,31 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Service.Services.Implementations
 {
-    public class PurchaseOrderService : IPurchaseOrderService
+    public class SalesOrderService : ISalesOrderService
     {
 
         private readonly UserManager<ApplicationUser> _userManager;
 
         private readonly IUnitOfWork _unitOfWork;
 
-        public PurchaseOrderService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        public SalesOrderService(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
         }
-        public async Task<bool> AddAsync(PurchaseOrder purchaseOrder)
+        public async Task<bool> AddAsync(SalesOrder salesOrder)
         {
-            await _unitOfWork.PurchaseOrderRepository.AddAsync(purchaseOrder);
+            await _unitOfWork.SalesOrderRepository.AddAsync(salesOrder);
             return await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<IEnumerable<PurchaseOrder>> GetAllAsync(Expression<Func<PurchaseOrder, bool>>? filter, string? includeProperties = null)
+        public async Task<IEnumerable<SalesOrder>> GetAllAsync(Expression<Func<SalesOrder, bool>>? filter, string? includeProperties = null)
         {
-            return await _unitOfWork.PurchaseOrderRepository.GetAllAsync(filter, includeProperties);
+            return await _unitOfWork.SalesOrderRepository.GetAllAsync(filter, includeProperties);
         }
-        public async Task<int> GetCountAsync(Expression<Func<PurchaseOrder, bool>>? filter = null)
+        public async Task<int> GetCountAsync(Expression<Func<SalesOrder, bool>>? filter = null)
         {
-            return await _unitOfWork.PurchaseOrderRepository.CountAsync(filter);
+            return await _unitOfWork.SalesOrderRepository.CountAsync(filter);
         }
     }
 }
