@@ -38,5 +38,9 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         {
             return await _unitOfWork.SalesOrderRepository.CountAsync(filter);
         }
+        public async Task<SalesOrder> OrderDetails(Guid OrderId)
+        {
+            return await _unitOfWork.SalesOrderRepository.OrderDetails(OrderId);
+        }
     }
 }

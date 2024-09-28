@@ -13,5 +13,6 @@ namespace InventoryManagementSystem.Service.Services.Contracts
         Task<bool> AddAsync(SalesOrder salesOrder);
         Task<IEnumerable<SalesOrder>> GetAllAsync(Expression<Func<SalesOrder, bool>>? filter, string? includeProperties = null);
         Task<int> GetCountAsync(Expression<Func<SalesOrder, bool>>? filter = null);
+        Task<SalesOrder> OrderDetails(Guid OrderId);
     }
 }

@@ -10,6 +10,6 @@ namespace InventoryManagementSystem.Data.Repositories.Contracts
 {
     public interface ISalesOrderRepository : IRepository<SalesOrder>
     {
-
+        Task<SalesOrder> OrderDetails(Guid OrderId);
     }
 }

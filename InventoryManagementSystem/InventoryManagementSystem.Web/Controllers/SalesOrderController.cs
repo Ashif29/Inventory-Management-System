@@ -1,5 +1,6 @@
 ﻿using InventoryManagementSystem.Data.Entities;
 using InventoryManagementSystem.Service.Services.Contracts;
+using InventoryManagementSystem.Service.Services.Implementations;
 using InventoryManagementSystem.Web.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -107,6 +108,57 @@ namespace InventoryManagementSystem.Web.Controllers
             return Ok(ProductList);
         }
 
-       
+        public async Task<IActionResult> OrderDetails(Guid OrderId)
+        {
+            var orderDetails = await _salesOrderService.OrderDetails(OrderId);
+
+            var model = new SalesOrderDetailsVM
+            {
+                Id = orderDetails.Id,
+                SOCode = orderDetails.SOCode,
+                SalesmanName = orderDetails.Salesman.FullName,
+                SalesmanEmail = orderDetails.Salesman.Email,
+                ConsumerName = orderDetails.Consumer.FullName,
+                ConsumerEmail = orderDetails.Consumer.Email,
+                DeliveryDate = orderDetails.DeliveryDate,
+                Status = orderDetails.Status,
+                Notes = orderDetails.Notes,
+                TotalCost = orderDetails.TotalCost,
+                SalesOrderItems = orderDetails.SalesOrderDetails.Select(detail => new SalesOrderItemVM
+                {
+                    ProductName = detail.Product.Name,
+                    SalesPrice = detail.SalesPrice,
+                    Quantity = detail.Quantity
+                }).ToList()
+            };
+            return View(model);
+        }
+
+
+        public async Task<IActionResult> GenerateInvoicePdf(Guid OrderId)
+        {
+            var orderDetails = await _salesOrderService.OrderDetails(OrderId);
+
+            var model = new SalesOrderDetailsVM
+            {
+                SOCode = orderDetails.SOCode,
+                SalesmanName = orderDetails.Salesman.FullName,
+                SalesmanEmail = orderDetails.Salesman.Email,
+                ConsumerName = orderDetails.Consumer.FullName,
+                ConsumerEmail = orderDetails.Consumer.Email,
+                DeliveryDate = orderDetails.DeliveryDate,
+                Status = orderDetails.Status,
+                Notes = orderDetails.Notes,
+                TotalCost = orderDetails.TotalCost,
+                SalesOrderItems = orderDetails.SalesOrderDetails.Select(detail => new SalesOrderItemVM
+                {
+                    ProductName = detail.Product.Name,
+                    SalesPrice = detail.SalesPrice,
+                    Quantity = detail.Quantity
+                }).ToList()
+            };
+            return View(model);
+        }
+
     }
 }
