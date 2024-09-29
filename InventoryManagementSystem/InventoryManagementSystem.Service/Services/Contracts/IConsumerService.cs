@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,5 +12,6 @@ namespace InventoryManagementSystem.Service.Services.Contracts
     {
         Task<bool> AddAsync(string  userId);
         Task<IEnumerable<Consumer>> GetAllAsync();
+        Task<Consumer> GetByIdAsync(Expression<Func<Consumer, bool>> filter);
     }
 }

@@ -5,10 +5,7 @@
 <div class="w-100 card border-0 p-2 mt-1">
 
     <div class="card-header d-flex justify-content-between align-items-centerbg-gradient" style="background-color : #16325B">
-        <h5 class="text-white fw-bold mb-0">Delivered Sales Order List</h5>
-        <a asp-controller="SalesOrder" asp-action="Add" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Add
-        </a>
+        <h5 class="text-white fw-bold mb-0">Sales Order List</h5>
     </div>
 
     <div class="card-body border">
@@ -48,16 +45,35 @@
                         <td class="text-center align-middle">@obj.Consumer.FullName</td>
                         <td class="text-center align-middle">@obj.TotalCost</td>
                         <td class="text-center align-middle">
-
-                            <button type="button"
-                                    class="btn btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#CanceilModal"
-                                    data-id="@obj.Id">
-                                <span class="badge bg-warning">Delivered</span>
-                            </button>
-
-
+                            @if (obj.Status == OrderStatus.Pending)
+                            {
+                                <button type="button"
+                                        class="btn btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#VerifyModal"
+                                        data-id="@obj.Id">
+                                    <span class="badge bg-secondary">Pending</span>
+                                </button>
+                            }
+                            else if (obj.Status == OrderStatus.Delivered)
+                            {
+                                <button type="button"
+                                        class="btn btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#CanceilModal"
+                                        data-id="@obj.Id">
+                                    <span class="badge bg-warning">Delivered</span>
+                                </button>
+                            }
+                            else if (obj.Status == OrderStatus.Verified)
+                            {
+                                <span class="badge bg-success"> Verified </span>
+                            }
+                            else if (obj.Status == OrderStatus.Canceiled)
+                            {
+                                <span class="badge bg-danger"> Canceiled </span>
+                            }
+                            
                         </td>
                         <td class="text-center align-middle">
                             <a asp-controller="SalesOrder" asp-action="OrderDetails" asp-route-OrderId="@obj.Id" class="btn btn-primary mx-2">
@@ -72,6 +88,29 @@
     </div>
 </div>
 
+
+
+<div class="modal fade" id="VerifyModal" tabindex="-1" aria-labelledby="VerifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="VerifyModalLabel">Canceil?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to canceil this sales order?
+            </div>
+            <div class="modal-footer">
+                <form id="verifyForm" method="post" action="/Consumer/CanceilSO">
+                    <input type="hidden" name="id" id="VerifyId" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="CanceilModal" tabindex="-1" aria-labelledby="CanceilModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -80,12 +119,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to cancel this sales order?
+                Are you sure you want to cancel or verify this sales order?
             </div>
             <div class="modal-footer">
                 <form id="actionForm" method="post" action="">
                     <input type="hidden" name="id" id="CanceilId" />
-                    <button type="submit" class="btn btn-danger" formaction="/Salesman/CanceilSO">Cancel Order</button>
+                    <button type="submit" class="btn btn-danger" formaction="/Consumer/CanceilSO">Cancel Order</button>
+                    <button type="submit" class="btn btn-success" formaction="/Consumer/VerifySO">Verify Order</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </form>
             </div>
@@ -93,13 +133,18 @@
     </div>
 </div>
 
-
-
 @section Scripts {
     @{
         <partial name="_ValidationScriptsPartial" />
     }
     <script>
+        var VerifyModal = document.getElementById('VerifyModal');
+        VerifyModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
+            var deleteInput = document.getElementById('VerifyId');
+            deleteInput.value = id;
+        });
 
         var CanceilModal = document.getElementById('CanceilModal');
         CanceilModal.addEventListener('show.bs.modal', function (event) {
@@ -108,6 +153,5 @@
             var deleteInput = document.getElementById('CanceilId');
             deleteInput.value = id;
         });
-
     </script>
 }
