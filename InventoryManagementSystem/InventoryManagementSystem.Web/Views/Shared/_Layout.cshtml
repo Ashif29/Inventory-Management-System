@@ -9,95 +9,104 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/InventoryManagementSystem.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <style>
-        /* Make the sidebar fixed */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100; /* Stay on top */
-            padding: 48px 0 0; /* Height of navbar */
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
-        }
-
-        /* Style for the sidebar */
-        .sidebar .nav-link {
-            font-weight: bold;
-            font-size: 18px;
-            color: white;
-        }
-
-        /* Sidebar background color */
-        .bg-success {
-            background-color: #28a745 !important; /* You can adjust the color as needed */
-        }
-
-        /* Content area adjustment */
-        .main-content {
-            margin-left: 250px; /* Width of the sidebar */
-        }
-
-        /* Toastr positioning adjustment */
-        .toast-top-right {
-            right: 12px;
-            top: 60px; /* Adjust based on navbar height */
-        }
-    </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <partial name="_RegisterLoginLogoutPartial" />
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
+            <div class="container-fluid">
+                <a href="#" class="navbar-brand"><h3>IMS</h3></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        ﻿@if (User.IsInRole(UserRoles.Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Product Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Product" asp-action="Index">Product</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Category" asp-action="Index">Category</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    User Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="Index">AllUser</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="Supplier">Supplier</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="SalesMan">SalesMan</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="SalesMan">SalesMan</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="Consumer">Consumer</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="User" asp-action="Admin">Admin</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        ﻿@if (User.IsInRole(UserRoles.Purchaser))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Purchase Orders
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Purchaser" asp-action="Index">All</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Purchaser" asp-action="PendingPurchases">Pending</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Purchaser" asp-action="VerifiedPurchases">Delivered</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        }
+                        ﻿@if (User.IsInRole(UserRoles.Supplier))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Puechase Orders
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Product" asp-action="Index">Requested</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Category" asp-action="Index">Delivered</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Category" asp-action="Index">Canceiled</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_RegisterLoginLogoutPartial" />
+                </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Sidebar -->
-    <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 sidebar" style="background-color : #16325B">
-        <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-            <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <span class="fs-5 d-none d-sm-inline">IMS</span>
-            </a>
-            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                <li class="nav-item">
-                    <a asp-controller="Home" asp-action="Index" class="nav-link align-middle px-0">
-                        <i class="bi bi-house-fill"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Product" asp-action="Index" class="nav-link px-0 align-middle">
-                        <i class="bi bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">Products</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a asp-controller="Category" asp-action="Index" class="nav-link px-0 align-middle">
-                        <i class="bi bi-person-plus-fill"></i> <span class="ms-1 d-none d-sm-inline">Categories</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="User" asp-action="Index" class="nav-link px-0 align-middle">
-                        <i class="bi bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">Users</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="PurchaseOrder" asp-action="Index" class="nav-link px-0 align-middle">
-                        <i class="bi bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">PO</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-controller="SalesOrder" asp-action="Index" class="nav-link px-0 align-middle">
-                        <i class="bi bi-people-fill"></i> <span class="ms-1 d-none d-sm-inline">SO</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
+        </nav>
+    </header>
     <!-- Main Content -->
     <div class="main-content">
         <main role="main" class="pb-3">
@@ -120,6 +129,7 @@
                 </script>
             }
             @RenderBody()
+            
         </main>
     </div>
 
@@ -128,6 +138,8 @@
             &copy; 2024 - InventoryManagementSystem.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

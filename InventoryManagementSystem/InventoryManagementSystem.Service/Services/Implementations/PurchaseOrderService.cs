@@ -34,6 +34,12 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         {
             return await _unitOfWork.PurchaseOrderRepository.GetAllAsync(filter, includeProperties);
         }
+
+        public Task<PurchaseOrder> GetByIdAsync(Expression<Func<PurchaseOrder, bool>> filter, string? includeProperties = null)
+        {
+            return _unitOfWork.PurchaseOrderRepository.GetByIdAsync(filter, includeProperties);
+        }
+
         public async Task<int> GetCountAsync(Expression<Func<PurchaseOrder, bool>>? filter = null)
         {
             return await _unitOfWork.PurchaseOrderRepository.CountAsync(filter);
@@ -42,6 +48,12 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         public async Task<PurchaseOrder> OrderDetails(Guid OrderId)
         {
             return await _unitOfWork.PurchaseOrderRepository.OrderDetails(OrderId);
+        }
+
+        public async Task<bool> UpdateAsync(PurchaseOrder purchaseOrder)
+        {
+           await _unitOfWork.PurchaseOrderRepository.UpdateAsync(purchaseOrder);
+            return await _unitOfWork.CompleteAsync();
         }
     }
 }

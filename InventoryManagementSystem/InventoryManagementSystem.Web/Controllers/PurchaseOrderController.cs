@@ -88,7 +88,7 @@ namespace InventoryManagementSystem.Web.Controllers
                         detail.PurchaseOrderId = purchaseOrder.Id;
                         await _purchaseOrderDetailService.AddAsync(detail);
                     }
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "Purchaser");
                 }
                 ModelState.AddModelError("", "Error adding purchase order.");
             }

@@ -13,7 +13,8 @@ namespace InventoryManagementSystem.Service.Services.Contracts
         Task<bool> AddAsync(PurchaseOrder purchaseOrder);
         Task<IEnumerable<PurchaseOrder>> GetAllAsync(Expression<Func<PurchaseOrder, bool>>? filter, string? includeProperties = null);
         Task<int> GetCountAsync(Expression<Func<PurchaseOrder, bool>>? filter = null);
-
+        Task<PurchaseOrder> GetByIdAsync(Expression<Func<PurchaseOrder, bool>> filter, string? includeProperties = null);
         Task<PurchaseOrder> OrderDetails(Guid OrderId);
+        Task<bool> UpdateAsync(PurchaseOrder purchaseOrder);
     }
 }
