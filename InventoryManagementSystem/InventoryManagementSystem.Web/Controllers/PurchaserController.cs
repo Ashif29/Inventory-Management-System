@@ -85,7 +85,38 @@ namespace InventoryManagementSystem.Web.Controllers
 
             return View(model);
         }
+        public async Task<IActionResult> CanceiledPurchases()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
 
+            var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
+                                u => u.PurchaserId == purchaser.Id && u.Status == OrderStatus.Canceiled,
+                                includeProperties: "Purchaser,Supplier"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new PurchaseOrderVM();
+            model.PurchaseOrderList = purchaseOrders;
+
+            return View(model);
+        }
+        public async Task<IActionResult> DeliveredPurchases()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
+
+            var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
+                                u => u.PurchaserId == purchaser.Id && u.Status == OrderStatus.Delivered,
+                                includeProperties: "Purchaser,Supplier"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new PurchaseOrderVM();
+            model.PurchaseOrderList = purchaseOrders;
+
+            return View(model);
+        }
         [HttpPost]
         public async Task<IActionResult> VerifyPO(Guid id)
         {
@@ -118,6 +149,30 @@ namespace InventoryManagementSystem.Web.Controllers
                 return RedirectToAction("Index");
             }
             TempData["error"] = "Verification Error.";
+
+
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        public async Task<IActionResult> CanceilPO(Guid id)
+        {
+            var purchaseOrder = await _purchaseOrderService.GetByIdAsync(u => u.Id == id, includeProperties: "PurchaseOrderDetails,PurchaseOrderDetails.Product");
+
+            if (purchaseOrder == null)
+            {
+                return NotFound("Purchase order not found.");
+            }
+
+            purchaseOrder.Status = OrderStatus.Canceiled;
+
+            var success = await _purchaseOrderService.UpdateAsync(purchaseOrder);
+
+            if (success)
+            {
+                TempData["success"] = "The Purchase order canceiled.";
+                return RedirectToAction("Index");
+            }
+            TempData["error"] = "Cancelation Error.";
 
 
             return RedirectToAction(nameof(Index));
