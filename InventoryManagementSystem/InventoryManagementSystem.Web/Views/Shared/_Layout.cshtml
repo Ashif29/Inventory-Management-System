@@ -92,20 +92,27 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Puechase Orders
+                                    Purchase Orders
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Product" asp-action="Index">Requested</a>
+                                        <a class="dropdown-item" asp-controller="Supplier" asp-action="Index">All</a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Category" asp-action="Index">Delivered</a>
+                                        <a class="dropdown-item" asp-controller="Supplier" asp-action="PendingPurchases">Pending</a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Category" asp-action="Index">Canceiled</a>
+                                        <a class="dropdown-item" asp-controller="Supplier" asp-action="VerifiedPurchases">Verified</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Supplier" asp-action="DeliveredPurchases">Delivered</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Supplier" asp-action="CanceiledPurchases">Canciled</a>
                                     </li>
                                 </ul>
                             </li>
+
                         }
                     </ul>
                     <partial name="_RegisterLoginLogoutPartial" />

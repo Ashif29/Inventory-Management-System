@@ -11,8 +11,8 @@ using System.Security.Claims;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
-    [Authorize(Roles = UserRoles.Purchaser)]
-    public class PurchaserController : Controller
+    [Authorize(Roles = UserRoles.Supplier)]
+    public class SupplierController : Controller
     {
 
         private readonly IPurchaseOrderService _purchaseOrderService;
@@ -22,7 +22,7 @@ namespace InventoryManagementSystem.Web.Controllers
         private readonly IPurchaserService _purchaserService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public PurchaserController(
+        public SupplierController(
             IPurchaseOrderService purchaseOrderService,
             IPurchaseOrderDetailService purchaseOrderDetailService,
             IProductService productService,
@@ -40,10 +40,10 @@ namespace InventoryManagementSystem.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
+            Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
-                                u => u.PurchaserId == purchaser.Id,
+                                u => u.SupplierId == supplier.Id,
                                 includeProperties: "Purchaser,Supplier"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
@@ -55,10 +55,10 @@ namespace InventoryManagementSystem.Web.Controllers
         public async Task<IActionResult> PendingPurchases()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
+            Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
-                                u => u.PurchaserId == purchaser.Id && u.Status == OrderStatus.Pending,
+                                u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Pending,
                                 includeProperties: "Purchaser,Supplier"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
@@ -67,89 +67,55 @@ namespace InventoryManagementSystem.Web.Controllers
 
             return View(model);
         }
+
         public async Task<IActionResult> VerifiedPurchases()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
+            Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
-                                u => u.PurchaserId == purchaser.Id && u.Status == OrderStatus.Verified,
+                                u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Verified,
                                 includeProperties: "Purchaser,Supplier"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
-
             var model = new PurchaseOrderVM();
             model.PurchaseOrderList = purchaseOrders;
 
             return View(model);
+
+            return View(model);
         }
+
         public async Task<IActionResult> CanceiledPurchases()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
+            Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
-                                u => u.PurchaserId == purchaser.Id && u.Status == OrderStatus.Canceiled,
+                                u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Canceiled,
                                 includeProperties: "Purchaser,Supplier"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
-
             var model = new PurchaseOrderVM();
             model.PurchaseOrderList = purchaseOrders;
 
             return View(model);
         }
+
         public async Task<IActionResult> DeliveredPurchases()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            Purchaser purchaser = await _purchaserService.GetByIdAsync(u => u.UserId == userId);
+            Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
-                                u => u.PurchaserId == purchaser.Id && u.Status == OrderStatus.Delivered,
+                                u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Delivered,
                                 includeProperties: "Purchaser,Supplier"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
-
             var model = new PurchaseOrderVM();
             model.PurchaseOrderList = purchaseOrders;
 
             return View(model);
-        }
-        [HttpPost]
-        public async Task<IActionResult> VerifyPO(Guid id)
-        {
-            var purchaseOrder = await _purchaseOrderService.GetByIdAsync(u => u.Id == id, includeProperties: "PurchaseOrderDetails,PurchaseOrderDetails.Product");
-
-            if (purchaseOrder == null)
-            {
-                return NotFound("Purchase order not found.");
-            }
-
-            purchaseOrder.Status = OrderStatus.Verified;
-
-            foreach (var item in purchaseOrder.PurchaseOrderDetails)
-            {
-                var product = await _productService.GetByIdAsync(u => u.Id == item.ProductId);
-
-                if (product != null)
-                {
-                     product.StockLevel += item.Quantity;
-                    await _productService.UpdateAsync(product);
-                }
-            }
-            
-            purchaseOrder.DeliveryDate = DateTime.Now;
-            var success = await _purchaseOrderService.UpdateAsync(purchaseOrder);
-
-            if (success)
-            {
-                TempData["success"] = "The Purchase order verified.";
-                return RedirectToAction("Index");
-            }
-            TempData["error"] = "Verification Error.";
-
-
-            return RedirectToAction(nameof(Index));
         }
         [HttpPost]
         public async Task<IActionResult> CanceilPO(Guid id)
@@ -171,6 +137,30 @@ namespace InventoryManagementSystem.Web.Controllers
                 return RedirectToAction("Index");
             }
             TempData["error"] = "Cancelation Error.";
+
+
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeliverPO(Guid id)
+        {
+            var purchaseOrder = await _purchaseOrderService.GetByIdAsync(u => u.Id == id);
+
+            if (purchaseOrder == null)
+            {
+                return NotFound("Purchase order not found.");
+            }
+
+            purchaseOrder.Status = OrderStatus.Delivered;
+
+            var success = await _purchaseOrderService.UpdateAsync(purchaseOrder);
+
+            if (success)
+            {
+                TempData["success"] = "The Purchase order delivered.";
+                return RedirectToAction("Index");
+            }
+            TempData["error"] = "Delivery Error.";
 
 
             return RedirectToAction(nameof(Index));

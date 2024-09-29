@@ -5,10 +5,7 @@
 <div class="w-100 card border-0 p-2 mt-1">
 
     <div class="card-header d-flex justify-content-between align-items-centerbg-gradient" style="background-color : #16325B">
-        <h5 class="text-white fw-bold mb-0">Purchase Order List</h5>
-        <a asp-controller="PurchaseOrder" asp-action="Add" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Add
-        </a>
+        <h5 class="text-white fw-bold mb-0">Supply Order List</h5>
     </div>
 
     <div class="card-body border">
@@ -60,13 +57,7 @@
                             }
                             else if (obj.Status == OrderStatus.Delivered)
                             {
-                                <button type="button"
-                                        class="btn btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#VerifyModal"
-                                        data-id="@obj.Id">
-                                    <span class="badge bg-warning">Delivered</span>
-                                </button>
+                                 <span class="badge bg-warning">Delivered</span>
                             }
                             else if (obj.Status == OrderStatus.Verified)
                             {
@@ -76,7 +67,7 @@
                             {
                                 <span class="badge bg-danger"> Canceiled </span>
                             }
-                            
+
                         </td>
                         <td class="text-center align-middle">
                             <a asp-controller="PurchaseOrder" asp-action="OrderDetails" asp-route-OrderId="@obj.Id" class="btn btn-primary mx-2">
@@ -92,28 +83,6 @@
 </div>
 
 
-
-<div class="modal fade" id="VerifyModal" tabindex="-1" aria-labelledby="VerifyModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="VerifyModalLabel">Verified?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to verify this purchase order?
-            </div>
-            <div class="modal-footer">
-                <form id="verifyForm" method="post" action="/Purchaser/VerifyPO">
-                    <input type="hidden" name="id" id="VerifyId" />
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-danger">Yes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="CanceilModal" tabindex="-1" aria-labelledby="CanceilModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -122,12 +91,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to cancel this purchase order?
+                Are you sure you want to cancel or deliver this purchase order?
             </div>
             <div class="modal-footer">
                 <form id="actionForm" method="post" action="">
                     <input type="hidden" name="id" id="CanceilId" />
-                    <button type="submit" class="btn btn-danger" formaction="/Purchaser/CanceilPO">Cancel Order</button>
+                    <button type="submit" class="btn btn-danger" formaction="/Supplier/CanceilPO">Cancel Order</button>
+                    <button type="submit" class="btn btn-warning" formaction="/Supplier/DeliverPO">Deliver Order</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </form>
             </div>
@@ -140,14 +110,6 @@
         <partial name="_ValidationScriptsPartial" />
     }
     <script>
-        var VerifyModal = document.getElementById('VerifyModal');
-        VerifyModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var id = button.getAttribute('data-id');
-            var deleteInput = document.getElementById('VerifyId');
-            deleteInput.value = id;
-        });
-
         var CanceilModal = document.getElementById('CanceilModal');
         CanceilModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;

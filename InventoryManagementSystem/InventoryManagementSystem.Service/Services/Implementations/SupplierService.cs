@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +47,11 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         public async Task<IEnumerable<Supplier>> GetAllAsync()
         {
             return await _unitOfWork.SupplierRepository.GetAllAsync();
+        }
+
+        public async Task<Supplier> GetByIdAsync(Expression<Func<Supplier, bool>> filter)
+        {
+            return await _unitOfWork.SupplierRepository.GetByIdAsync(filter);
         }
     }
 }

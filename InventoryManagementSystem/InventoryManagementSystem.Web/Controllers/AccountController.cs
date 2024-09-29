@@ -64,6 +64,10 @@ namespace InventoryManagementSystem.Web.Controllers
                     {
                         return RedirectToAction("Index", "Purchaser");
                     }
+                    if (await _userManager.IsInRoleAsync(user, UserRoles.Supplier))
+                    {
+                        return RedirectToAction("Index", "Supplier");
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
