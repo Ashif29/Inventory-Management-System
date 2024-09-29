@@ -114,6 +114,32 @@
                             </li>
 
                         }
+                        ﻿@if (User.IsInRole(UserRoles.Salesman))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sales Orders
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Salesman" asp-action="Index">All</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Salesman" asp-action="PendingSales">Pending</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Salesman" asp-action="VerifiedSales">Verified</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Salesman" asp-action="DeliveredSales">Delivered</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Salesman" asp-action="CanceiledSales">Canciled</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        }
                     </ul>
                     <partial name="_RegisterLoginLogoutPartial" />
                 </div>

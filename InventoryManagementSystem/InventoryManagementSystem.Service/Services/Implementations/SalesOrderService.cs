@@ -42,5 +42,14 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         {
             return await _unitOfWork.SalesOrderRepository.OrderDetails(OrderId);
         }
+        public Task<SalesOrder> GetByIdAsync(Expression<Func<SalesOrder, bool>> filter, string? includeProperties = null)
+        {
+            return _unitOfWork.SalesOrderRepository.GetByIdAsync(filter, includeProperties);
+        }
+        public async Task<bool> UpdateAsync(SalesOrder salesOrder)
+        {
+            await _unitOfWork.SalesOrderRepository.UpdateAsync(salesOrder);
+            return await _unitOfWork.CompleteAsync();
+        }
     }
 }

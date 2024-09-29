@@ -89,11 +89,11 @@ namespace InventoryManagementSystem.Web.Controllers
                         detail.SalesOrderId = salesOrder.Id;
                         await _salesOrderDetailService.AddAsync(detail);
                     }
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "Salesman");
                 }
                 ModelState.AddModelError("", "Error adding sales order.");
             }
-            return View(model);
+            return RedirectToAction("Index", "Salesman");
         }
 
 

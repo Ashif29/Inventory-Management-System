@@ -1,12 +1,12 @@
 ﻿@using InventoryManagementSystem.Data.Enums
 @using InventoryManagementSystem.Web.ViewModels
-@model PurchaseOrderVM
+@model SalesOrderVM
 
 <div class="w-100 card border-0 p-2 mt-1">
 
     <div class="card-header d-flex justify-content-between align-items-centerbg-gradient" style="background-color : #16325B">
-        <h5 class="text-white fw-bold mb-0">Verified Purchase Order List</h5>
-        <a asp-controller="PurchaseOrder" asp-action="Add" class="btn btn-primary">
+        <h5 class="text-white fw-bold mb-0">Pending Sales Order List</h5>
+        <a asp-controller="SalesOrder" asp-action="Add" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Add
         </a>
     </div>
@@ -16,16 +16,16 @@
             <thead>
                 <tr>
                     <th class="text-center align-middle">
-                        <span>PO Date</span>
+                        <span>SO Date</span>
                     </th>
                     <th class="text-center align-middle">
-                        <span>PO Code</span>
+                        <span>SO Code</span>
                     </th>
                     <th class="text-center align-middle">
-                        <span>Pruchaser</span>
+                        <span>Salesman</span>
                     </th>
                     <th class="text-center align-middle">
-                        <span>Supplier</span>
+                        <span>Consumer</span>
                     </th>
                     <th class="text-center align-middle">
                         <span>Total Amount</span>
@@ -39,22 +39,22 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model.PurchaseOrderList)
+                @foreach (var obj in Model.SalesOrderList)
                 {
                     <tr>
                         <td class="text-center align-middle">@obj.CreatedAt</td>
-                        <td class="text-center align-middle">@obj.POCode</td>
-                        <td class="text-center align-middle">@obj.Purchaser.FullName</td>
-                        <td class="text-center align-middle">@obj.Supplier.FullName</td>
+                        <td class="text-center align-middle">@obj.SOCode</td>
+                        <td class="text-center align-middle">@obj.Salesman.FullName</td>
+                        <td class="text-center align-middle">@obj.Consumer.FullName</td>
                         <td class="text-center align-middle">@obj.TotalCost</td>
                         <td class="text-center align-middle">
 
-                            <span class="badge bg-success"> Verified </span>
+                            <span class="badge bg-danger">Canceiled</span>
 
 
                         </td>
                         <td class="text-center align-middle">
-                            <a asp-controller="PurchaseOrder" asp-action="OrderDetails" asp-route-OrderId="@obj.Id" class="btn btn-primary mx-2">
+                            <a asp-controller="SalesOrder" asp-action="OrderDetails" asp-route-OrderId="@obj.Id" class="btn btn-primary mx-2">
                                 <i class="bi bi-eye-fill"></i>
                             </a>
                         </td>
@@ -65,4 +65,3 @@
         </table>
     </div>
 </div>
-
