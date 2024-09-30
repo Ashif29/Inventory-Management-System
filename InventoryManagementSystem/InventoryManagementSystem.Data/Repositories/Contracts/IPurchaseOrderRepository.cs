@@ -11,5 +11,6 @@ namespace InventoryManagementSystem.Data.Repositories.Contracts
     public interface IPurchaseOrderRepository : IRepository<PurchaseOrder>
     {
         Task<PurchaseOrder> OrderDetails(Guid OrderId);
+        IQueryable<PurchaseOrderDetail> GetVerifiedPurchaseOrderDetails();
     }
 }

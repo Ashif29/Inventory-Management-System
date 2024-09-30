@@ -21,6 +21,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
         ISalesmanRepository SalesmanRepository { get; }
         ISalesOrderRepository SalesOrderRepository { get; }
 
+
         Task<bool> CompleteAsync();
     }
 }

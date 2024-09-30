@@ -1,1 +1,24 @@
-﻿﻿<h3>Dashboard!!!</h3>
+﻿@using InventoryManagementSystem.Web.ViewModels
+@model FinancialReportVM
+<div class="container text-center mt-5">
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-5 bg-primary text-white p-4 rounded me-3">
+            <h2 class="display-5 fw-bold">Total COGS</h2>
+            <p class="lead fw-bold">৳ @Model.TotalCOGS.ToString("N2")</p>
+        </div>
+        <div class="col-md-5 bg-success text-white p-4 rounded">
+            <h2 class="fw-bold display-5">Total Revenue</h2>
+            <p class="lead fw-bold">৳ @Model.TotalRevenue.ToString("N2")</p>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-5 bg-primary text-white p-4 rounded me-3">
+            <h2 class="display-5 fw-bold">Total Profit</h2>
+            <p class="lead fw-bold">৳ @Model.TotalProfit.ToString("N2")</p>
+        </div>
+        <div class="col-md-5 bg-success text-white p-4 rounded">
+            <h2 class="display-5 fw-bold">Total Loss</h2>
+            <p class="lead fw-bold">৳ @Model.TotalLoss.ToString("N2")</p>
+        </div>
+    </div>
+</div>

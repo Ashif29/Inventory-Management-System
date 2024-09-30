@@ -1,5 +1,6 @@
 ﻿using InventoryManagementSystem.Data.Entities;
 using InventoryManagementSystem.Data.Repositories.Core;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace InventoryManagementSystem.Data.Repositories.Contracts
     public interface ISalesOrderRepository : IRepository<SalesOrder>
     {
         Task<SalesOrder> OrderDetails(Guid OrderId);
+        IQueryable<SalesOrderDetail> GetVerifiedSalesOrderDetails();
     }
 }

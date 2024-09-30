@@ -23,7 +23,7 @@ namespace InventoryManagementSystem.Data.Repositories.Core
 
         public IConsumerRepository ConsumerRepository { get; private set; }
         public ISalesmanRepository SalesmanRepository { get; private set; }
-        public ISalesOrderRepository SalesOrderRepository { get; }
+        public ISalesOrderRepository SalesOrderRepository { get; private set; }
 
 
         public UnitOfWork(ApplicationDbContext db)

@@ -51,7 +51,10 @@ builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
 
 builder.Services.AddScoped<IPurchaseOrderDetailService, PurchaseOrderDetailService>();
+
 builder.Services.AddScoped<ISalesOrderDetailService, SalesOrderDetailService>();
+builder.Services.AddScoped<IFinancialReportService, FinancialReportService>();
+
 
 
 builder.Services.AddScoped<RoleSeeder>();

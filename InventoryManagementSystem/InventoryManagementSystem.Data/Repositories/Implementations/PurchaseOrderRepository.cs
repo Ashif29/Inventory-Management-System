@@ -1,5 +1,6 @@
 ﻿using InventoryManagementSystem.Data.DataAccess;
 using InventoryManagementSystem.Data.Entities;
+using InventoryManagementSystem.Data.Enums;
 using InventoryManagementSystem.Data.Repositories.Contracts;
 using InventoryManagementSystem.Data.Repositories.Core;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,12 @@ namespace InventoryManagementSystem.Data.Repositories.Implementations
             .FirstOrDefaultAsync(po => po.Id == OrderId);
 
             return purchaseOrder;
+        }
+        public IQueryable<PurchaseOrderDetail> GetVerifiedPurchaseOrderDetails()
+        {
+            return _db.PurchaseOrders
+                .Where(order => order.Status == OrderStatus.Verified)
+                .SelectMany(order => order.PurchaseOrderDetails);
         }
     }
 }
