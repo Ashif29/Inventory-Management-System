@@ -69,15 +69,16 @@ namespace InventoryManagementSystem.Service.Services.Implementations
         {
             double totalRevenue = await GetTotalRevenueAsync();
             double totalCOGS = await GetTotalCOGSAsync();
-
-            return totalRevenue - totalCOGS;
+            double totalProfit  = totalRevenue - totalCOGS;
+            return totalProfit < 0 ? 0 : totalCOGS;
         }
 
         public async Task<double> GetTotalLossAsync()
         {
-            double totalProfit = await GetTotalProfitAsync();
-
-            return totalProfit < 0 ? Math.Abs(totalProfit) : 0;
+            double totalRevenue = await GetTotalRevenueAsync();
+            double totalCOGS = await GetTotalCOGSAsync();
+            double totalLoss = totalCOGS - totalRevenue;
+            return totalLoss < 0 ? 0 : totalLoss;
         }
     }
 
