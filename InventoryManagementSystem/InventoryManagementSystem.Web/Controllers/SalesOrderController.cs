@@ -21,6 +21,7 @@ namespace InventoryManagementSystem.Web.Controllers
         private readonly IConsumerService _consumerService;
         private readonly ISalesmanService _salesmanService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<SalesOrderController> _logger;
 
         public SalesOrderController(
             ISalesOrderService salesOrderService,
@@ -28,7 +29,8 @@ namespace InventoryManagementSystem.Web.Controllers
             IProductService productService,
             IConsumerService consumerService,
             ISalesmanService salesmanService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ILogger<SalesOrderController> logger)
         {
             _salesOrderService = salesOrderService;
             _salesOrderDetailService = salesOrderDetailService;
@@ -36,6 +38,7 @@ namespace InventoryManagementSystem.Web.Controllers
             _consumerService = consumerService;
             _salesmanService = salesmanService;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -44,6 +47,8 @@ namespace InventoryManagementSystem.Web.Controllers
             var salesOrders = await _salesOrderService.GetAllAsync(null, includeProperties: "Salesman,Consumer");
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
+
+            _logger.LogInformation("Retrieved all sales orders for admin.");
 
             return View(model);
         }
@@ -65,7 +70,9 @@ namespace InventoryManagementSystem.Web.Controllers
                 });
 
             model.CurrentSalesmanName = applicationUser?.FullName;
-            model.nextSOCode = "SO-100" + (await _salesOrderService.GetCountAsync() + 1);
+            model.nextSOCode = "SO-" + (await _salesOrderService.GetCountAsync() + 1);
+            _logger.LogInformation("Salesman {SalesmanName} accessed the add sales order page.", model.CurrentSalesmanName);
+
             return View(model);
         }
 
@@ -78,7 +85,7 @@ namespace InventoryManagementSystem.Web.Controllers
             {
 
                 Salesman salesman = await _salesmanService.GetByIdAsync(u => u.FullName == model.CurrentSalesmanName);
-                // Create a SalesOrder instance from the model
+                
                 var salesOrder = model.SalesOrder;
 
                 salesOrder.SOCode = model.nextSOCode;
@@ -96,8 +103,12 @@ namespace InventoryManagementSystem.Web.Controllers
                         detail.SalesOrderId = salesOrder.Id;
                         await _salesOrderDetailService.AddAsync(detail);
                     }
+                    _logger.LogInformation("Sales order {SOCode} added successfully.", salesOrder.SOCode);
+
                     return RedirectToAction("Index", "Salesman");
                 }
+                _logger.LogError("Error adding sales order. Model state: {ModelState}", ModelState);
+
                 ModelState.AddModelError("", "Error adding sales order.");
             }
             return RedirectToAction("Index", "Salesman");
@@ -112,6 +123,8 @@ namespace InventoryManagementSystem.Web.Controllers
                    Value = p.Id.ToString(),
                    Text = p.Name
                });
+            _logger.LogInformation("Retrieved product list for sales order.");
+
             return Ok(ProductList);
         }
 
@@ -140,6 +153,8 @@ namespace InventoryManagementSystem.Web.Controllers
                     Quantity = detail.Quantity
                 }).ToList()
             };
+            _logger.LogInformation("Viewed order details for sales order {SOCode}.", orderDetails.SOCode);
+
             return View(model);
         }
 
@@ -166,6 +181,8 @@ namespace InventoryManagementSystem.Web.Controllers
                     Quantity = detail.Quantity
                 }).ToList()
             };
+            _logger.LogInformation("Generating invoice PDF for sales order {SOCode}.", orderDetails.SOCode);
+
             return View(model);
         }
 
@@ -179,7 +196,7 @@ namespace InventoryManagementSystem.Web.Controllers
                                 .ToList();
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
-
+            _logger.LogInformation("Viewed pending sales orders.");
             return View(model);
         }
 
@@ -194,22 +211,22 @@ namespace InventoryManagementSystem.Web.Controllers
 
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
-
+            _logger.LogInformation("Viewed verified sales orders.");
             return View(model);
         }
 
         [Authorize(Roles = UserRoles.Admin)]
-        public async Task<IActionResult> CanceiledSO()
+        public async Task<IActionResult> CanceledSO()
         {
             var salesOrders = (await _salesOrderService.GetAllAsync(
-                                u => u.Status == OrderStatus.Canceiled,
+                                u => u.Status == OrderStatus.Canceled,
                                 includeProperties: "Salesman,Consumer"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
 
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
-
+            _logger.LogInformation("Viewed canceled sales orders.");
             return View(model);
         }
 
@@ -224,7 +241,7 @@ namespace InventoryManagementSystem.Web.Controllers
 
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
-
+            _logger.LogInformation("Viewed delivered sales orders.");
             return View(model);
         }
 

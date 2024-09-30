@@ -18,13 +18,15 @@ namespace InventoryManagementSystem.Web.Controllers
         private readonly IPurchaserService _purchaserService;
         private readonly IConsumerService _consumerService;
         private readonly ISalesmanService _salesmanService;
+        private readonly ILogger<UserController> _logger;
 
         public UserController(
             IUserService userService, 
             ISupplierService supplierService,
             IPurchaserService purchaserService,
             IConsumerService consumerService,
-            ISalesmanService salesmanService
+            ISalesmanService salesmanService,
+            ILogger<UserController> logger
             )
         {
             _userService = userService;
@@ -32,10 +34,12 @@ namespace InventoryManagementSystem.Web.Controllers
             _purchaserService = purchaserService;
             _salesmanService = salesmanService;
             _consumerService = consumerService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation("Fetching all users with roles.");
             var users = await _userService.GetAllUsersWithRolesAsync();
 
             var rolesList = new List<string>
@@ -64,13 +68,17 @@ namespace InventoryManagementSystem.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AssignRole(string userId, string role)
         {
+            _logger.LogInformation($"Assigning role {role} to user {userId}.");
+
             var result = await _userService.AssignRoleToUserAsync(userId, role);
             if (!result)
             {
+                _logger.LogWarning($"Failed to assign role {role} to user {userId}.");
                 return NotFound();
             }
 
             bool isAdded = await AddUserToRelatedTableAsync(userId, role);
+            _logger.LogInformation($"User {userId} successfully assigned to {role} related table: {isAdded}.");
             return Ok();
         }
 

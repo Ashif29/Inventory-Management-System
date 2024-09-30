@@ -6,17 +6,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using System.Threading.Tasks;
+
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -32,12 +39,15 @@ namespace InventoryManagementSystem.Web.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogInformation("User registered successfully: {Email}", model.Email);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
+                    _logger.LogWarning("Error occurred during registration: {Error}", error.Description);
                 }
             }
             return View(model);
@@ -56,6 +66,8 @@ namespace InventoryManagementSystem.Web.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByEmailAsync(model.Email);
+                    _logger.LogInformation("User logged in: {Email}", model.Email);
+
                     if (await _userManager.IsInRoleAsync(user, UserRoles.Admin))
                     {
                         return RedirectToAction("Index", "Dashboard");
@@ -78,6 +90,8 @@ namespace InventoryManagementSystem.Web.Controllers
                     }
                     return RedirectToAction("Index", "Home");
                 }
+
+                _logger.LogWarning("Invalid login attempt: {Email}", model.Email);
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
             }
             return View(model);
@@ -86,7 +100,9 @@ namespace InventoryManagementSystem.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
             return RedirectToAction("Index", "Home");
         }
     }
+
 }

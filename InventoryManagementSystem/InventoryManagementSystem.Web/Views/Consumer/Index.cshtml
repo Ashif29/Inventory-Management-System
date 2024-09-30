@@ -60,7 +60,7 @@
                                 <button type="button"
                                         class="btn btn-sm"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#CanceilModal"
+                                        data-bs-target="#CancelModal"
                                         data-id="@obj.Id">
                                     <span class="badge bg-warning">Delivered</span>
                                 </button>
@@ -69,9 +69,9 @@
                             {
                                 <span class="badge bg-success"> Verified </span>
                             }
-                            else if (obj.Status == OrderStatus.Canceiled)
+                            else if (obj.Status == OrderStatus.Canceled)
                             {
-                                <span class="badge bg-danger"> Canceiled </span>
+                                <span class="badge bg-danger"> Canceled </span>
                             }
                             
                         </td>
@@ -94,14 +94,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="VerifyModalLabel">Canceil?</h5>
+                <h5 class="modal-title" id="VerifyModalLabel">Cancel?</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to canceil this sales order?
+                Are you sure you want to cancel this sales order?
             </div>
             <div class="modal-footer">
-                <form id="verifyForm" method="post" action="/Consumer/CanceilSO">
+                <form id="verifyForm" method="post" action="/Consumer/CancelSO">
                     <input type="hidden" name="id" id="VerifyId" />
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     <button type="submit" class="btn btn-danger">Yes</button>
@@ -111,11 +111,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="CanceilModal" tabindex="-1" aria-labelledby="CanceilModalLabel" aria-hidden="true">
+<div class="modal fade" id="CancelModal" tabindex="-1" aria-labelledby="CancelModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="CanceilModalLabel">Action Confirmation</h5>
+                <h5 class="modal-title" id="CancelModalLabel">Action Confirmation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -123,8 +123,8 @@
             </div>
             <div class="modal-footer">
                 <form id="actionForm" method="post" action="">
-                    <input type="hidden" name="id" id="CanceilId" />
-                    <button type="submit" class="btn btn-danger" formaction="/Consumer/CanceilSO">Cancel Order</button>
+                    <input type="hidden" name="id" id="CancelId" />
+                    <button type="submit" class="btn btn-danger" formaction="/Consumer/CancelSO">Cancel Order</button>
                     <button type="submit" class="btn btn-success" formaction="/Consumer/VerifySO">Verify Order</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </form>
@@ -146,11 +146,11 @@
             deleteInput.value = id;
         });
 
-        var CanceilModal = document.getElementById('CanceilModal');
-        CanceilModal.addEventListener('show.bs.modal', function (event) {
+        var CancelModal = document.getElementById('CancelModal');
+        CancelModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var id = button.getAttribute('data-id');
-            var deleteInput = document.getElementById('CanceilId');
+            var deleteInput = document.getElementById('CancelId');
             deleteInput.value = id;
         });
     </script>

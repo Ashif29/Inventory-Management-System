@@ -13,17 +13,22 @@ namespace InventoryManagementSystem.Web.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        public ProductController(IProductService productService, ICategoryService categoryService, ILogger<ProductController> logger)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _logger = logger; 
         }
+
         public async Task<IActionResult> Index(ProductQueryParameters? queryParameters, int pageNumber)
         {
             if (pageNumber < 1) pageNumber = 1;
 
             int pageSize = 5;
+
+            _logger.LogInformation("Fetching products with page number {PageNumber}", pageNumber); 
 
             var productsData = await _productService.GetAllAsync(queryParameters, pageNumber, pageSize, includeProperties: "Category");
 
@@ -41,6 +46,7 @@ namespace InventoryManagementSystem.Web.Controllers
         {
             var categoryList = await _categoryService.GetAllCategoryAsync();
 
+            _logger.LogInformation("Loading add product view."); 
 
             var productVM = new ProductVM
             {
@@ -58,7 +64,7 @@ namespace InventoryManagementSystem.Web.Controllers
         public async Task<IActionResult> Add(ProductVM productVM)
         {
             productVM.Product.Category = await _categoryService.GetByIdAsync(u => u.Id == productVM.Product.CategoryId);
-            
+
             if (ModelState.IsValid)
             {
                 bool IsNameExists = await _productService.IsExistsAsync(u => u.Name == productVM.Product.Name);
@@ -66,6 +72,7 @@ namespace InventoryManagementSystem.Web.Controllers
                 if (IsNameExists)
                 {
                     TempData["error"] = "This name already exists!";
+                    _logger.LogWarning("Product name already exists: {ProductName}", productVM.Product.Name); 
                     return View();
                 }
 
@@ -74,11 +81,13 @@ namespace InventoryManagementSystem.Web.Controllers
                 if (success)
                 {
                     TempData["success"] = "The Product added successfully.";
+                    _logger.LogInformation("Product added successfully: {ProductName}", productVM.Product.Name); 
                     return RedirectToAction("Index");
                 }
             }
 
             TempData["error"] = "An error occurs while adding.";
+            _logger.LogError("Error occurred while adding product: {ProductName}", productVM.Product.Name); 
 
             return View();
         }
@@ -91,10 +100,12 @@ namespace InventoryManagementSystem.Web.Controllers
             if (!success)
             {
                 TempData["error"] = "An error occurs while deleting.";
+                _logger.LogError("Error occurred while deleting product with ID: {ProductId}", id);
                 return NotFound();
             }
 
             TempData["success"] = "The Product has been deleted successfully.";
+            _logger.LogInformation("Product deleted successfully with ID: {ProductId}", id); 
 
             return RedirectToAction("Index");
         }
@@ -106,10 +117,13 @@ namespace InventoryManagementSystem.Web.Controllers
             if (product == null)
             {
                 TempData["error"] = "Product not found.";
+                _logger.LogWarning("Product not found with ID: {ProductId}", ProductId);
                 return NotFound();
             }
+
             var categoryList = await _categoryService.GetAllCategoryAsync();
 
+            _logger.LogInformation("Loading edit product view for product ID: {ProductId}", ProductId); 
 
             var productVM = new ProductVM
             {
@@ -133,12 +147,16 @@ namespace InventoryManagementSystem.Web.Controllers
                 if (success)
                 {
                     TempData["success"] = "The Product updated successfully.";
+                    _logger.LogInformation("Product updated successfully: {ProductName}", productVM.Product.Name); 
                     return RedirectToAction("Index");
                 }
             }
+
             TempData["error"] = "An error occurs while updating.";
+            _logger.LogError("Error occurred while updating product: {ProductName}", productVM.Product.Name); 
+
             return RedirectToAction("Index");
         }
-
     }
+
 }

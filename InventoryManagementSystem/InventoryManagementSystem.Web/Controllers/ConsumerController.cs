@@ -14,13 +14,13 @@ namespace InventoryManagementSystem.Web.Controllers
     [Authorize(Roles = UserRoles.Consumer)]
     public class ConsumerController : Controller
     {
-
         private readonly ISalesOrderService _salesOrderService;
         private readonly ISalesOrderDetailService _salesOrderDetailService;
         private readonly IProductService _productService;
         private readonly IConsumerService _consumerService;
         private readonly ISalesmanService _salesmanService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ConsumerController> _logger; 
 
         public ConsumerController(
             ISalesOrderService salesOrderService,
@@ -28,7 +28,8 @@ namespace InventoryManagementSystem.Web.Controllers
             IProductService productService,
             IConsumerService consumerService,
             ISalesmanService salesmanService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ILogger<ConsumerController> logger) 
         {
             _salesOrderService = salesOrderService;
             _salesOrderDetailService = salesOrderDetailService;
@@ -36,7 +37,9 @@ namespace InventoryManagementSystem.Web.Controllers
             _consumerService = consumerService;
             _salesmanService = salesmanService;
             _userManager = userManager;
+            _logger = logger; 
         }
+
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -47,11 +50,15 @@ namespace InventoryManagementSystem.Web.Controllers
                                 includeProperties: "Salesman,Consumer"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
+
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
 
+            _logger.LogInformation("Consumer {UserId} retrieved all sales orders.", userId); 
+
             return View(model);
         }
+
         public async Task<IActionResult> PendingSales()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -62,11 +69,15 @@ namespace InventoryManagementSystem.Web.Controllers
                                 includeProperties: "Salesman,Consumer"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
+
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
 
+            _logger.LogInformation("Consumer {UserId} retrieved pending sales orders.", userId);
+
             return View(model);
         }
+
         public async Task<IActionResult> VerifiedSales()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -81,15 +92,18 @@ namespace InventoryManagementSystem.Web.Controllers
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
 
+            _logger.LogInformation("Consumer {UserId} retrieved verified sales orders.", userId); 
+
             return View(model);
         }
-        public async Task<IActionResult> CanceiledSales()
+
+        public async Task<IActionResult> CanceledSales()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Consumer consumer = await _consumerService.GetByIdAsync(u => u.UserId == userId);
 
             var salesOrders = (await _salesOrderService.GetAllAsync(
-                                u => u.ConsumerId == consumer.Id && u.Status == OrderStatus.Canceiled,
+                                u => u.ConsumerId == consumer.Id && u.Status == OrderStatus.Canceled,
                                 includeProperties: "Salesman,Consumer"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
@@ -97,8 +111,11 @@ namespace InventoryManagementSystem.Web.Controllers
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
 
+            _logger.LogInformation("Consumer {UserId} retrieved canceled sales orders.", userId); 
+
             return View(model);
         }
+
         public async Task<IActionResult> DeliveredSales()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -113,8 +130,11 @@ namespace InventoryManagementSystem.Web.Controllers
             var model = new SalesOrderVM();
             model.SalesOrderList = salesOrders;
 
+            _logger.LogInformation("Consumer {UserId} retrieved delivered sales orders.", userId); 
+
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> VerifySO(Guid id)
         {
@@ -122,6 +142,7 @@ namespace InventoryManagementSystem.Web.Controllers
 
             if (salesOrder == null)
             {
+                _logger.LogWarning("Attempted to verify a sales order that was not found. Order ID: {OrderId}", id);
                 return NotFound("Sales order not found.");
             }
 
@@ -144,36 +165,41 @@ namespace InventoryManagementSystem.Web.Controllers
             if (success)
             {
                 TempData["success"] = "The Sales order verified.";
+                _logger.LogInformation("Sales order {OrderId} verified successfully.", id);
                 return RedirectToAction("Index");
             }
+
             TempData["error"] = "Verification Error.";
-
-
+            _logger.LogError("Error verifying sales order {OrderId}.", id); 
             return RedirectToAction(nameof(Index));
         }
+
         [HttpPost]
-        public async Task<IActionResult> CanceilSO(Guid id)
+        public async Task<IActionResult> CancelSO(Guid id)
         {
             var salesOrder = await _salesOrderService.GetByIdAsync(u => u.Id == id);
 
             if (salesOrder == null)
             {
+                _logger.LogWarning("Attempted to cancel a sales order that was not found. Order ID: {OrderId}", id);
                 return NotFound("Sales order not found.");
             }
 
-            salesOrder.Status = OrderStatus.Canceiled;
+            salesOrder.Status = OrderStatus.Canceled;
 
             var success = await _salesOrderService.UpdateAsync(salesOrder);
 
             if (success)
             {
-                TempData["success"] = "The Sales order canceiled.";
+                TempData["success"] = "The Sales order canceled.";
+                _logger.LogInformation("Sales order {OrderId} canceled successfully.", id);
                 return RedirectToAction("Index");
             }
+
             TempData["error"] = "Cancelation Error.";
-
-
+            _logger.LogError("Error canceling sales order {OrderId}.", id); 
             return RedirectToAction(nameof(Index));
         }
     }
+
 }

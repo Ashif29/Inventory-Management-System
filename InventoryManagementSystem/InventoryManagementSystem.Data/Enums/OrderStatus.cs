@@ -11,6 +11,6 @@ namespace InventoryManagementSystem.Data.Enums
         Pending,
         Delivered,
         Verified,
-        Canceiled
+        Canceled
     }
 }

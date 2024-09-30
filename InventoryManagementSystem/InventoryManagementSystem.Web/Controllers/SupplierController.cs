@@ -21,6 +21,7 @@ namespace InventoryManagementSystem.Web.Controllers
         private readonly ISupplierService _supplierService;
         private readonly IPurchaserService _purchaserService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<SupplierController> _logger;
 
         public SupplierController(
             IPurchaseOrderService purchaseOrderService,
@@ -28,7 +29,8 @@ namespace InventoryManagementSystem.Web.Controllers
             IProductService productService,
             ISupplierService supplierService,
             IPurchaserService purchaserService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ILogger<SupplierController> logger)
         {
             _purchaseOrderService = purchaseOrderService;
             _purchaseOrderDetailService = purchaseOrderDetailService;
@@ -36,11 +38,15 @@ namespace InventoryManagementSystem.Web.Controllers
             _supplierService = supplierService;
             _purchaserService = purchaserService;
             _userManager = userManager;
+            _logger = logger;
         }
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
+
+            _logger.LogInformation("Fetching all purchase orders for supplier with ID: {SupplierId}", supplier.Id);
+
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
                                 u => u.SupplierId == supplier.Id,
@@ -56,6 +62,10 @@ namespace InventoryManagementSystem.Web.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
+
+
+            _logger.LogInformation("Fetching pending purchase orders for supplier with ID: {SupplierId}", supplier.Id);
+
 
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
                                 u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Pending,
@@ -73,6 +83,10 @@ namespace InventoryManagementSystem.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
+
+            _logger.LogInformation("Fetching verified purchase orders for supplier with ID: {SupplierId}", supplier.Id);
+
+
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
                                 u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Verified,
                                 includeProperties: "Purchaser,Supplier"))
@@ -86,13 +100,17 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> CanceiledPurchases()
+        public async Task<IActionResult> CanceledPurchases()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
+
+            _logger.LogInformation("Fetching canceled purchase orders for supplier with ID: {SupplierId}", supplier.Id);
+
+
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
-                                u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Canceiled,
+                                u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Canceled,
                                 includeProperties: "Purchaser,Supplier"))
                                 .OrderByDescending(u => u.CreatedAt)
                                 .ToList();
@@ -107,6 +125,10 @@ namespace InventoryManagementSystem.Web.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             Supplier supplier = await _supplierService.GetByIdAsync(u => u.UserId == userId);
 
+
+            _logger.LogInformation("Fetching delivered purchase orders for supplier with ID: {SupplierId}", supplier.Id);
+
+
             var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
                                 u => u.SupplierId == supplier.Id && u.Status == OrderStatus.Delivered,
                                 includeProperties: "Purchaser,Supplier"))
@@ -118,22 +140,26 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> CanceilPO(Guid id)
+        public async Task<IActionResult> CancelPO(Guid id)
         {
             var purchaseOrder = await _purchaseOrderService.GetByIdAsync(u => u.Id == id);
 
             if (purchaseOrder == null)
             {
+                _logger.LogWarning("Attempted to cancel a purchase order that does not exist: {OrderId}", id);
+
                 return NotFound("Purchase order not found.");
             }
 
-            purchaseOrder.Status = OrderStatus.Canceiled;
+            purchaseOrder.Status = OrderStatus.Canceled;
 
             var success = await _purchaseOrderService.UpdateAsync(purchaseOrder);
 
             if (success)
             {
-                TempData["success"] = "The Purchase order canceiled.";
+                TempData["success"] = "The Purchase order canceled.";
+                _logger.LogInformation("Purchase order {OrderId} has been canceled successfully.", id);
+
                 return RedirectToAction("Index");
             }
             TempData["error"] = "Cancelation Error.";
@@ -148,6 +174,8 @@ namespace InventoryManagementSystem.Web.Controllers
 
             if (purchaseOrder == null)
             {
+                _logger.LogWarning("Attempted to deliver a purchase order that does not exist: {OrderId}", id);
+
                 return NotFound("Purchase order not found.");
             }
 
@@ -158,10 +186,12 @@ namespace InventoryManagementSystem.Web.Controllers
             if (success)
             {
                 TempData["success"] = "The Purchase order delivered.";
+                _logger.LogInformation("Purchase order {OrderId} has been delivered successfully.", id);
+
                 return RedirectToAction("Index");
             }
             TempData["error"] = "Delivery Error.";
-
+            _logger.LogError("Failed to deliver purchase order {OrderId}.", id);
 
             return RedirectToAction(nameof(Index));
         }
