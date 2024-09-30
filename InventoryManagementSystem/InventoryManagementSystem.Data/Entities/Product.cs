@@ -29,10 +29,6 @@ namespace InventoryManagementSystem.Data.Entities
         [Range(0, int.MaxValue, ErrorMessage = "Stock level must be a non-negative integer.")]
         public int StockLevel { get; set; }
 
-        [Required(ErrorMessage = "Price is required")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
-        public double Price { get; set; }
-
         [NotMapped]
         public IFormFile? Image { get; set; }
         [Display(Name = "Photo")]
