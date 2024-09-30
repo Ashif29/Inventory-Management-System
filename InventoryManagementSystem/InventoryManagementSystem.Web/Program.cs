@@ -11,7 +11,6 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSqlConnection"));
@@ -42,46 +41,36 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-
 builder.Services.AddScoped<IUserService, UserService>();
-
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IPurchaserService, PurchaserService>();
 builder.Services.AddScoped<IConsumerService, ConsumerService>();
 builder.Services.AddScoped<ISalesmanService, SalesmanService>();
-
 builder.Services.AddScoped<IPurchaseOrderService, PurchaseOrderService>();
 builder.Services.AddScoped<ISalesOrderService, SalesOrderService>();
-
 builder.Services.AddScoped<IPurchaseOrderDetailService, PurchaseOrderDetailService>();
-
 builder.Services.AddScoped<ISalesOrderDetailService, SalesOrderDetailService>();
 builder.Services.AddScoped<IFinancialReportService, FinancialReportService>();
 
-
-
-builder.Services.AddScoped<RoleSeeder>();
-
-
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build(); 
+var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var roleSeeder = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
-    await roleSeeder.SeedRolesAsync();
+    var services = scope.ServiceProvider;
+
+    // Seed roles and the default admin user
+    await SeedRoles(services);
+    await SeedAdminUser(services);
 }
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-
-
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -97,8 +86,6 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
-
-
 
 async Task SeedRoles(IServiceProvider serviceProvider)
 {
@@ -119,6 +106,31 @@ async Task SeedRoles(IServiceProvider serviceProvider)
         if (!roleExist)
         {
             await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+}
+
+async Task SeedAdminUser(IServiceProvider serviceProvider)
+{
+    var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+    string adminEmail = "admin@gmail.com";
+    string adminPassword = "Admin@123";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        adminUser = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FullName = "Admin"
+        };
+
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, UserRoles.Admin);
         }
     }
 }
