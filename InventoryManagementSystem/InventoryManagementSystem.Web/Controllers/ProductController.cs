@@ -2,11 +2,13 @@
 using InventoryManagementSystem.Data.Entities.NotMapped;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;

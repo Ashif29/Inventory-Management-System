@@ -1,6 +1,9 @@
 ﻿using InventoryManagementSystem.Data.Entities;
+using InventoryManagementSystem.Data.Entities.NotMapped;
+using InventoryManagementSystem.Data.Enums;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +11,7 @@ using System.Security.Claims;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+    [Authorize]
     public class PurchaseOrderController : Controller
     {
         private readonly IPurchaseOrderService _purchaseOrderService;
@@ -33,6 +37,7 @@ namespace InventoryManagementSystem.Web.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Index()
         {
             var purchaseOrders = await _purchaseOrderService.GetAllAsync(null, includeProperties: "Purchaser,Supplier");
@@ -42,6 +47,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = UserRoles.Purchaser)]
         public async Task<IActionResult> Add()
         {
             
@@ -62,6 +68,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = UserRoles.Purchaser)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(PurchaseOrderVM model)
@@ -95,7 +102,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = UserRoles.Purchaser)]
         public async Task<IActionResult> GetProductList()
         {
             var ProductList = (await _productService.GetAllAsync())
@@ -107,6 +114,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return Ok(ProductList);
         }
 
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Supplier + "," + UserRoles.Purchaser)]
         public async Task<IActionResult> OrderDetails(Guid OrderId)
         {
             var orderDetails =  await _purchaseOrderService.OrderDetails(OrderId);
@@ -134,6 +142,7 @@ namespace InventoryManagementSystem.Web.Controllers
         }
 
 
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Supplier + "," + UserRoles.Purchaser)]
         public async Task<IActionResult> GenerateInvoicePdf(Guid OrderId)
         {
             var orderDetails = await _purchaseOrderService.OrderDetails(OrderId);
@@ -159,5 +168,63 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> PendingPO()
+        {
+            var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Pending,
+                                includeProperties: "Purchaser,Supplier"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+            var model = new PurchaseOrderVM();
+            model.PurchaseOrderList = purchaseOrders;
+
+            return View(model);
+        }
+        
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> VerifiedPO()
+        {
+            var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Verified,
+                                includeProperties: "Purchaser,Supplier"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new PurchaseOrderVM();
+            model.PurchaseOrderList = purchaseOrders;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> CanceiledPO()
+        {
+            var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Canceiled,
+                                includeProperties: "Purchaser,Supplier"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new PurchaseOrderVM();
+            model.PurchaseOrderList = purchaseOrders;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> DeliveredPO()
+        {
+            var purchaseOrders = (await _purchaseOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Delivered,
+                                includeProperties: "Purchaser,Supplier"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new PurchaseOrderVM();
+            model.PurchaseOrderList = purchaseOrders;
+
+            return View(model);
+        }
     }
 }

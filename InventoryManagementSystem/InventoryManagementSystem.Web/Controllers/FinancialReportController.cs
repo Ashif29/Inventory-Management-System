@@ -1,8 +1,11 @@
-﻿using InventoryManagementSystem.Service.Services.Contracts;
+﻿using InventoryManagementSystem.Data.Entities.NotMapped;
+using InventoryManagementSystem.Service.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class FinancialReportController : Controller
     {
         private readonly IFinancialReportService _financialReportService;

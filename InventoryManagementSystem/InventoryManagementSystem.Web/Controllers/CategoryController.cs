@@ -3,9 +3,12 @@ using InventoryManagementSystem.Data.Entities;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+
+    [Authorize(Roles = UserRoles.Admin)]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;

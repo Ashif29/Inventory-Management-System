@@ -115,42 +115,7 @@ namespace InventoryManagementSystem.Web.Controllers
 
             return View(model);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> VerifySO(Guid id)
-        //{
-        //    var salesOrder = await _salesOrderService.GetByIdAsync(u => u.Id == id, includeProperties: "SalesOrderDetails,SalesOrderDetails.Product");
-
-        //    if (salesOrder == null)
-        //    {
-        //        return NotFound("Sales order not found.");
-        //    }
-
-        //    salesOrder.Status = OrderStatus.Verified;
-
-        //    foreach (var item in salesOrder.SalesOrderDetails)
-        //    {
-        //        var product = await _productService.GetByIdAsync(u => u.Id == item.ProductId);
-
-        //        if (product != null)
-        //        {
-        //             product.StockLevel -= item.Quantity;
-        //            await _productService.UpdateAsync(product);
-        //        }
-        //    }
-
-        //    salesOrder.DeliveryDate = DateTime.Now;
-        //    var success = await _salesOrderService.UpdateAsync(salesOrder);
-
-        //    if (success)
-        //    {
-        //        TempData["success"] = "The Sales order verified.";
-        //        return RedirectToAction("Index");
-        //    }
-        //    TempData["error"] = "Verification Error.";
-
-
-        //    return RedirectToAction(nameof(Index));
-        //}
+        
         [HttpPost]
         public async Task<IActionResult> CanceilSO(Guid id)
         {

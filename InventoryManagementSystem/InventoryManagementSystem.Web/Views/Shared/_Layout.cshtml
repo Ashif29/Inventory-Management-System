@@ -61,6 +61,52 @@
                                     </li>
                                 </ul>
                             </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Purchase Orders
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="PurchaseOrder" asp-action="Index">All</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="PurchaseOrder" asp-action="VerifiedPO">Verified PO</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="PurchaseOrder" asp-action="DeliveredPO">Delivered PO</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="PurchaseOrder" asp-action="PendingPO">Pending PO</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="PurchaseOrder" asp-action="CanceiledPO">Canceiled PO</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sales Orders
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="SalesOrder" asp-action="Index">All</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="SalesOrder" asp-action="VerifiedSO">Verified SO</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="SalesOrder" asp-action="DeliveredSO">Delivered SO</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="SalesOrder" asp-action="PendingSO">Pending SO</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="SalesOrder" asp-action="CanceiledSO">Canceiled SO</a>
+                                    </li>
+                                </ul>
+                            </li>
                         }
                         ﻿@if (User.IsInRole(UserRoles.Purchaser))
                         {

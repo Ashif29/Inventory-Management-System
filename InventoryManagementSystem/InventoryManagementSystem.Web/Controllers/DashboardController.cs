@@ -1,11 +1,12 @@
-﻿using InventoryManagementSystem.Service.Services.Contracts;
+﻿using InventoryManagementSystem.Data.Entities.NotMapped;
+using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = UserRoles.Admin)]
     public class DashboardController : Controller
     {
 

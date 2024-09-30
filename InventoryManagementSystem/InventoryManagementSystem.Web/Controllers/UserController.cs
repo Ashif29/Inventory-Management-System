@@ -2,6 +2,7 @@
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Service.Services.Implementations;
 using InventoryManagementSystem.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+    [Authorize(Roles = UserRoles.Admin)]
     public class UserController : Controller
     {
         private readonly IUserService _userService;
@@ -69,12 +71,6 @@ namespace InventoryManagementSystem.Web.Controllers
             }
 
             bool isAdded = await AddUserToRelatedTableAsync(userId, role);
-
-            /*if (!isAdded)
-            {
-                return BadRequest("User could not be added.");
-            }*/
-
             return Ok();
         }
 

@@ -1,7 +1,10 @@
 ﻿using InventoryManagementSystem.Data.Entities;
+using InventoryManagementSystem.Data.Entities.NotMapped;
+using InventoryManagementSystem.Data.Enums;
 using InventoryManagementSystem.Service.Services.Contracts;
 using InventoryManagementSystem.Service.Services.Implementations;
 using InventoryManagementSystem.Web.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,6 +12,7 @@ using System.Security.Claims;
 
 namespace InventoryManagementSystem.Web.Controllers
 {
+    [Authorize]
     public class SalesOrderController : Controller
     {
         private readonly ISalesOrderService _salesOrderService;
@@ -34,6 +38,7 @@ namespace InventoryManagementSystem.Web.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = UserRoles.Admin)]
         public async Task<IActionResult> Index()
         {
             var salesOrders = await _salesOrderService.GetAllAsync(null, includeProperties: "Salesman,Consumer");
@@ -43,6 +48,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = UserRoles.Salesman)]
         public async Task<IActionResult> Add()
         {
             
@@ -63,6 +69,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = UserRoles.Salesman)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(SalesOrderVM model)
@@ -96,7 +103,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return RedirectToAction("Index", "Salesman");
         }
 
-
+        [Authorize(Roles = UserRoles.Salesman)]
         public async Task<IActionResult> GetProductList()
         {
             var ProductList = (await _productService.GetAllAsync())
@@ -108,6 +115,8 @@ namespace InventoryManagementSystem.Web.Controllers
             return Ok(ProductList);
         }
 
+
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Salesman + "," + UserRoles.Consumer)]
         public async Task<IActionResult> OrderDetails(Guid OrderId)
         {
             var orderDetails = await _salesOrderService.OrderDetails(OrderId);
@@ -134,7 +143,7 @@ namespace InventoryManagementSystem.Web.Controllers
             return View(model);
         }
 
-
+        [Authorize(Roles = UserRoles.Admin + "," + UserRoles.Salesman + "," + UserRoles.Consumer)]
         public async Task<IActionResult> GenerateInvoicePdf(Guid OrderId)
         {
             var orderDetails = await _salesOrderService.OrderDetails(OrderId);
@@ -157,6 +166,65 @@ namespace InventoryManagementSystem.Web.Controllers
                     Quantity = detail.Quantity
                 }).ToList()
             };
+            return View(model);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> PendingSO()
+        {
+            var salesOrders = (await _salesOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Pending,
+                                includeProperties: "Salesman,Consumer"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+            var model = new SalesOrderVM();
+            model.SalesOrderList = salesOrders;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> VerifiedSO()
+        {
+            var salesOrders = (await _salesOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Verified,
+                                includeProperties: "Salesman,Consumer"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new SalesOrderVM();
+            model.SalesOrderList = salesOrders;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> CanceiledSO()
+        {
+            var salesOrders = (await _salesOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Canceiled,
+                                includeProperties: "Salesman,Consumer"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new SalesOrderVM();
+            model.SalesOrderList = salesOrders;
+
+            return View(model);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        public async Task<IActionResult> DeliveredSO()
+        {
+            var salesOrders = (await _salesOrderService.GetAllAsync(
+                                u => u.Status == OrderStatus.Delivered,
+                                includeProperties: "Salesman,Consumer"))
+                                .OrderByDescending(u => u.CreatedAt)
+                                .ToList();
+
+            var model = new SalesOrderVM();
+            model.SalesOrderList = salesOrders;
+
             return View(model);
         }
 
