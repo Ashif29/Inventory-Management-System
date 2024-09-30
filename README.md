@@ -104,10 +104,11 @@ The Inventory Management System is a web application that simplifies product, ca
 
 ## Screenshots
 
-![](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+![]([https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://github.com/Ashif29/Inventory-Management-System/tree/Development/images))
 
 
 ## Database Diagram
+![]([https://via.placeholder.com/468x300?text=App+Screenshot+Here](https://github.com/Ashif29/Inventory-Management-System/tree/Development/images))
 ## Demo
 
 - [Video Presentation](https://drive.google.com/drive/folders/1IKcqUwcVSlSj1mVYH85UdU3KBvTylpp3?usp=drive_link)
