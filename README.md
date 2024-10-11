@@ -3,11 +3,6 @@
 
 The Inventory Management System is a web application that simplifies product, category, purchase order, and sales order management. It features role-based access for users(Admins, Salesmen, Purchasers, Suppliers, and Consumers), enabling efficient inventory tracking and financial reporting.
 
-
-## Acknowledgements
-
- - [This project is instructed by Onnorokom Software Ltd.](https://www.linkedin.com/company/onnorokom-software-ltd-/)
-
 ## Tech Stack
 
 **Backend:** ASP.NET Core (C#)
